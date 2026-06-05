@@ -3182,15 +3182,6 @@ async function syncUserProgress() {
     avatar: userProgress.avatar,
   };
 
-  try {
-    const response = await fetch("/api/progress", {
-      method: "PUT",
-      credentials: "include",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-    });
-    if (!response.ok) throw new Error("Progress sync failed.");
-    updateLeaderboard();
   progressSyncInFlight = (async () => {
     try {
       const response = await fetch("/api/progress", {
@@ -3214,10 +3205,7 @@ async function syncUserProgress() {
 
   return progressSyncInFlight;
 }
-  } catch (error) {
-    console.warn("Could not sync user progress:", error);
-  }
-}
+
 
 async function getAuthenticatedSession() {
   if (window.algoAuth) {
