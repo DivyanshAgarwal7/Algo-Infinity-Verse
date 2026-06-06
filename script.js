@@ -1776,11 +1776,18 @@ function closeQuizModal() {
       resultEl.innerHTML = "";
     }
 
-    // Restore quiz elements for next attempt
-    document.getElementById("topicQuizQuestionText").style.display = "block";
-    document.getElementById("topicQuizOptions").style.display = "block";
-    document.getElementById("topicQuizProgress").style.display = "block";
-    document.getElementById("topicQuizCounter").style.display = "block";
+    // Restore quiz elements for next attempt (null-safe)
+    const questionTextEl = document.getElementById("topicQuizQuestionText");
+    if (questionTextEl) questionTextEl.style.display = "block";
+
+    const optionsEl = document.getElementById("topicQuizOptions");
+    if (optionsEl) optionsEl.style.display = "block";
+
+    const progressEl = document.getElementById("topicQuizProgress");
+    if (progressEl) progressEl.style.display = "block";
+
+    const counterEl = document.getElementById("topicQuizCounter");
+    if (counterEl) counterEl.style.display = "block";
   } catch (e) {
     console.error("Error closing quiz modal:", e);
   }
@@ -1788,6 +1795,7 @@ function closeQuizModal() {
   clearInterval(quizTimerInterval);
   currentQuiz = null;
 }
+
 
 function renderQuizQuestion() {
   console.log("renderQuizQuestion called");
