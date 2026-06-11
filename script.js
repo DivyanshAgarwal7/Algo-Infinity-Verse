@@ -979,286 +979,6 @@ const dsaTopics = [
       "Word Ladder",
       "Network Delay Time",
     ],
-
-    dp: [
-        {
-            id: "dp-1",
-            question: "What are the two key properties needed for Dynamic Programming?",
-            options: ["Greedy and Divide & Conquer", "Optimal substructure and overlapping subproblems", "Recursion and memoization", "Iteration and base cases"],
-            correct: 1,
-            explanation: "DP requires optimal substructure (solution contains optimal subsolutions) and overlapping subproblems."
-        },
-        {
-            id: "dp-2",
-            question: "What is memoization in DP?",
-            options: ["Bottom-up tabulation", "Top-down caching of results", "Greedy choice", "Iterative approach"],
-            correct: 1,
-            explanation: "Memoization stores results of expensive function calls to avoid recomputation (top-down DP)."
-        },
-        {
-            id: "dp-3",
-            question: "What is tabulation in DP?",
-            options: ["Top-down recursive memoization", "Bottom-up iterative table filling", "Greedy approach", "Divide and conquer"],
-            correct: 1,
-            explanation: "Tabulation builds DP table iteratively from base cases upward (bottom-up)."
-        },
-        {
-            id: "dp-4",
-            question: "The Fibonacci sequence can be computed using DP in what time complexity?",
-            options: ["O(2^n) naive recursion", "O(n) DP", "O(log n)", "O(1)"],
-            correct: 1,
-            explanation: "DP Fibonacci computes in O(n) by storing previous two values, vs O(2^n) naive recursion."
-        },
-        {
-            id: "dp-5",
-            question: "Which classic DP problem asks: given n stairs, how many ways to reach top taking 1 or 2 steps?",
-            options: ["Coin Change", "Climbing Stairs", "House Robber", "Longest Increasing Subsequence"],
-            correct: 1,
-            explanation: "Climbing Stairs is essentially Fibonacci: ways[n] = ways[n-1] + ways[n-2]."
-        },
-        {
-            id: "dp-6",
-            question: "What is the 'state' in DP?",
-            options: ["Random number", "Set of variables defining subproblem", "Final answer", "Recursion depth"],
-            correct: 1,
-            explanation: "DP state captures parameters that uniquely define a subproblem (e.g., index, remaining capacity)."
-        },
-        {
-            id: "dp-7",
-            question: "Which DP problem involves maximizing sum of non-adjacent houses?",
-            options: ["Knapsack", "House Robber", "Longest Common Subsequence", "Edit Distance"],
-            correct: 1,
-            explanation: "House Robber: cannot rob adjacent houses; dp[i] = max(dp[i-1], dp[i-2] + nums[i])."
-        },
-        {
-            id: "dp-8",
-            question: "What is the time complexity of the classic 0/1 Knapsack DP?",
-            options: ["O(n)", "O(nW) where W=capacity", "O(2^n)", "O(n^2)"],
-            correct: 1,
-            explanation: "0/1 Knapsack DP uses a 2D table of size n x W, giving O(nW) time and space."
-        },
-        {
-            id: "dp-9",
-            question: "Which DP technique finds the longest increasing subsequence in O(n log n)?",
-            options: ["Memoization", "Patience sorting with binary search", "Tabulation", "Recursion"],
-            correct: 1,
-            explanation: "LIS can be optimized using patience sorting approach: maintain tails array, binary search for each element."
-        },
-        {
-            id: "dp-10",
-            question: "What is Edit Distance (Levenshtein distance) about?",
-            options: ["Sorting strings", "Minimum operations to convert one string to another", "Longest common substring", "String compression"],
-            correct: 1,
-            explanation: "Edit distance computes minimum insertions, deletions, substitutions to transform string A into B."
-        }
-    ],
-    greedy: [
-        {
-            id: "greedy-1",
-            question: "What is the main idea behind Greedy Algorithms?",
-            options: [
-                "Solve all subproblems first",
-                "Choose the locally optimal choice at each step",
-                "Use recursion only",
-                "Try every possible solution"
-            ],
-            correct: 1,
-            explanation: "Greedy algorithms make the best local choice at each step hoping to achieve a global optimum."
-        },
-    {
-        id: "greedy-2",
-        question: "Which problem is commonly solved using a Greedy approach?",
-        options: [
-            "Merge Sort",
-            "Activity Selection",
-            "Tower of Hanoi",
-            "Binary Search"
-        ],
-        correct: 1,
-        explanation: "Activity Selection is a classic Greedy Algorithm problem."
-    },
-    {
-        id: "greedy-3",
-        question: "Which Knapsack problem can be solved optimally using Greedy Algorithms?",
-        options: [
-            "0/1 Knapsack",
-            "Fractional Knapsack",
-            "Both",
-            "Neither"
-        ],
-        correct: 1,
-        explanation: "Fractional Knapsack can be solved greedily using value/weight ratio."
-    }
-    ]
-};
-
-// ===== DATA OBJECTS =====
-const dsaTopics = [
-    {
-        id: 1,
-        name: "Arrays",
-        icon: "📊",
-        description: "Learn array operations, manipulations, and common interview problems",
-        difficulty: "Easy-Medium",
-        theory: "Arrays are contiguous memory locations that store elements of the same type. They provide O(1) access time but fixed size.",
-        problems: ["Two Sum", "Maximum Subarray", "Merge Intervals", "Product Except Self", "Spiral Matrix"]
-    },
-    {
-        id: 2,
-        name: "Strings",
-        icon: "🔤",
-        description: "Master string algorithms, pattern matching, and string manipulation",
-        difficulty: "Easy-Medium",
-        theory: "Strings are arrays of characters. Key operations include concatenation, substring search, and pattern matching using algorithms like KMP.",
-        problems: ["Longest Substring Without Repeating", "Valid Parentheses", "Palindrome Partitioning", "String to Integer", "Group Anagrams"]
-    },
-    {
-        id: 3,
-        name: "Linked List",
-        icon: "🔗",
-        description: "Singly, doubly, and circular linked lists with traversal techniques",
-        difficulty: "Medium",
-        theory: "Linked lists are linear data structures where elements are linked using pointers. Allows dynamic size and efficient insertions/deletions.",
-        problems: ["Reverse Linked List", "Detect Cycle", "Merge Two Sorted Lists", "Remove Nth From End", "Intersection of Two Lists"]
-    },
-    {
-        id: 4,
-        name: "Trees",
-        icon: "🌳",
-        description: "Binary trees, BST, traversal algorithms, and tree-based problems",
-        difficulty: "Medium-Hard",
-        theory: "Trees are hierarchical structures. Binary trees have at most two children per node. BST maintains sorted order: left < root < right.",
-        problems: ["Maximum Depth", "Validate BST", "Lowest Common Ancestor", "Serialize/Deserialize", "Path Sum"]
-    },
-    {
-        id: 5,
-        name: "Graphs",
-        icon: "🕸️",
-        description: "Graph representations, traversal (BFS/DFS), shortest paths, and networks",
-        difficulty: "Hard",
-        theory: "Graphs consist of vertices connected by edges. Representations: adjacency list/matrix. Traversals: BFS (level-order) and DFS (depth-first).",
-        problems: ["Clone Graph", "Number of Islands", "Course Schedule", "Word Ladder", "Network Delay Time"]
-    },
-    {
-        id: 6,
-        name: "Dynamic Programming",
-        icon: "🎯",
-        description: "Recursion, memoization, tabulation, and optimization problems",
-        difficulty: "Hard",
-        theory: "DP breaks problems into overlapping subproblems. Stores solutions to avoid recomputation. Approaches: top-down (memoization) and bottom-up (tabulation).",
-        problems: ["Climbing Stairs", "Coin Change", "Longest Increasing Subsequence", "Edit Distance", "House Robber"]
-    },
-    {
-        id: 7,
-        name: "Greedy Algorithms",
-        icon: "💡",
-        description: "Learn greedy strategy, optimization techniques, and common real-world applications.",
-        difficulty: "Medium",
-        theory: `
-            Introduction:
-            Greedy Algorithms build a solution step by step by always choosing the locally optimal choice at each stage.
-
-            Greedy Approach:
-            • Choose the best available option.
-            • Add it to the solution.
-            • Never reconsider previous choices.
-            • Repeat until the solution is complete.
-
-            Advantages:
-            • Easy to understand and implement.
-            • Fast execution.
-            • Memory efficient.
-            • Useful for optimization problems.
-
-            Limitations:
-            • Does not always guarantee the optimal solution.
-            • Works only for problems with the greedy-choice property.
-            • Requires proof of correctness.
-
-            Common Problems:
-            • Activity Selection
-            • Fractional Knapsack
-            • Huffman Coding
-            • Job Sequencing
-            • Prim's Algorithm
-            • Kruskal's Algorithm
-
-            Practice Exercises:
-            1. Solve Activity Selection Problem.
-            2. Implement Fractional Knapsack.
-            3. Implement Huffman Coding.
-            4. Solve Job Sequencing Problem.
-            5. Find MST using Kruskal's Algorithm.
-            `,
-            problems: [
-                "Activity Selection",
-                "Fractional Knapsack",
-                "Huffman Coding",
-                "Job Sequencing",
-                "Prim's Algorithm",
-                "Kruskal's Algorithm"
-            ]
-    }
-];
-
-const practiceProblems = [
-    { id: 1, title: "Two Sum", difficulty: "easy", tags: ["Arrays", "Hash Table"], acceptance: "48.2%", category: "arrays" },
-    { id: 2, title: "Valid Parentheses", difficulty: "easy", tags: ["Strings", "Stack"], acceptance: "40.2%", category: "strings" },
-    { id: 3, title: "Merge Two Sorted Lists", difficulty: "easy", tags: ["Linked List", "Recursion"], acceptance: "58.5%", category: "linkedlist" },
-    { id: 4, title: "Maximum Subarray", difficulty: "medium", tags: ["Arrays", "Divide & Conquer"], acceptance: "46.2%", category: "arrays" },
-    { id: 5, title: "LRU Cache", difficulty: "medium", tags: ["Design", "Hash Table"], acceptance: "37.5%", category: "arrays" },
-    { id: 6, title: "Clone Graph", difficulty: "medium", tags: ["Graphs", "DFS", "BFS"], acceptance: "43.2%", category: "graphs" },
-    { id: 7, title: "Longest Increasing Subsequence", difficulty: "hard", tags: ["DP", "Binary Search"], acceptance: "42.1%", category: "dp" },
-    { id: 8, title: "Word Ladder", difficulty: "hard", tags: ["Graphs", "BFS"], acceptance: "31.4%", category: "graphs" },
-    { id: 9, title: "Trapping Rain Water", difficulty: "hard", tags: ["Arrays", "Two Pointers"], acceptance: "48.7%", category: "arrays" },
-    { id: 10, title: "Reverse Linked List", difficulty: "easy", tags: ["Linked List"], acceptance: "72.1%", category: "linkedlist" },
-    { id: 11, title: "Invert Binary Tree", difficulty: "easy", tags: ["Trees", "DFS"], acceptance: "68.5%", category: "trees" },
-    { id: 12, title: "Validate BST", difficulty: "medium", tags: ["Trees", "Recursion"], acceptance: "28.4%", category: "trees" },
-    { id: 13, title: "Number of Islands", difficulty: "medium", tags: ["Graphs", "DFS"], acceptance: "54.8%", category: "graphs" },
-    { id: 14, title: "House Robber", difficulty: "medium", tags: ["DP", "Arrays"], acceptance: "42.3%", category: "dp" },
-    { id: 15, title: "Course Schedule", difficulty: "medium", tags: ["Graphs", "Topological Sort"], acceptance: "44.7%", category: "graphs" },
-    {
-    id: 16,
-    title: "Activity Selection",
-    difficulty: "medium",
-    tags: ["Greedy", "Scheduling"],
-    acceptance: "52.4%",
-    category: "greedy"
-},
-{
-    id: 17,
-    title: "Fractional Knapsack",
-    difficulty: "medium",
-    tags: ["Greedy", "Optimization"],
-    acceptance: "58.7%",
-    category: "greedy"
-},
-{
-    id: 18,
-    title: "Job Sequencing with Deadlines",
-    difficulty: "hard",
-    tags: ["Greedy", "Scheduling"],
-    acceptance: "41.2%",
-    category: "greedy"
-},
-{
-    id: 19,
-    title: "Huffman Coding",
-    difficulty: "hard",
-    tags: ["Greedy", "Trees"],
-    acceptance: "46.8%",
-    category: "greedy"
-},
-{
-    id: 20,
-    title: "Minimum Spanning Tree",
-    difficulty: "medium",
-    tags: ["Greedy", "Graphs"],
-    acceptance: "55.1%",
-    category: "greedy"
-}
-
-
   },
   {
     id: 6,
@@ -1325,31 +1045,6 @@ const practiceProblems = [
     ],
   },
   {
-    id: 8,
-    name: "Shortest Path",
-    icon: "🛣️",
-    description: "Dijkstra's, Bellman-Ford, and Floyd-Warshall algorithms for finding optimal paths in graphs",
-    difficulty: "Medium-Hard",
-    theory: `
-    <h3 style="color:var(--accent); margin-bottom:1rem;">🛣️ Shortest Path — Graph Optimization</h3>
-    <p style="margin-bottom:1rem;">Shortest path algorithms find the <strong>minimum cost route</strong> between nodes in a weighted graph.</p>
-    <h4 style="color:var(--primary); margin:1rem 0 0.5rem;">⚡ Algorithm Comparison</h4>
-    <table style="width:100%; border-collapse:collapse; margin-bottom:1rem; font-size:0.9rem;">
-      <tr style="background:var(--dark-card);"><th style="padding:0.5rem 1rem; text-align:left; border:1px solid var(--glass-border);">Algorithm</th><th style="padding:0.5rem 1rem; text-align:left; border:1px solid var(--glass-border);">Time</th></tr>
-      <tr><td style="padding:0.5rem 1rem; border:1px solid var(--glass-border);">Dijkstra's</td><td style="padding:0.5rem 1rem; border:1px solid var(--glass-border); color:#22c55e;">O((V+E) log V) ✅</td></tr>
-      <tr style="background:var(--dark-card);"><td style="padding:0.5rem 1rem; border:1px solid var(--glass-border);">Bellman-Ford</td><td style="padding:0.5rem 1rem; border:1px solid var(--glass-border);">O(V×E)</td></tr>
-      <tr><td style="padding:0.5rem 1rem; border:1px solid var(--glass-border);">Floyd-Warshall</td><td style="padding:0.5rem 1rem; border:1px solid var(--glass-border);">O(V³)</td></tr>
-    </table>
-    <h4 style="color:var(--primary); margin:1rem 0 0.5rem;">🎯 When to Use What</h4>
-    <ul style="list-style:none; padding:0; margin-bottom:1rem;">
-      <li style="padding:0.3rem 0;">→ <strong>Dijkstra's</strong> — non-negative weights, single source</li>
-      <li style="padding:0.3rem 0;">→ <strong>Bellman-Ford</strong> — negative weights, negative cycle detection</li>
-      <li style="padding:0.3rem 0;">→ <strong>Floyd-Warshall</strong> — all-pairs shortest paths</li>
-    </ul>
-    <h4 style="color:var(--primary); margin:1rem 0 0.5rem;">🏆 Real Interview Questions from FAANG</h4>
-    <p style="color:var(--text-secondary);">Network Delay Time (Amazon), Cheapest Flights (Google), Path with Min Effort (Meta)</p>
-    `,
-    problems: ["Network Delay Time", "Cheapest Flights Within K Stops", "Path With Minimum Effort", "Find the City With Smallest Neighbors", "Shortest Path in Binary Matrix"],
     id: 7,
     name: "Matrix",
     icon: "🔢",
@@ -1379,7 +1074,6 @@ const practiceProblems = [
     problems: ["Spiral Matrix", "Rotate Image", "Number of Islands", "Set Matrix Zeroes", "Search a 2D Matrix"],
   },
 ];
-
 
 const practiceProblems = [
   {
@@ -1898,7 +1592,6 @@ const dailyChallenges = [
     problemId: null,
     xpReward: 100,
   },
-
 ];
 
 const chatbotResponses = {
@@ -1941,16 +1634,6 @@ const chatbotResponses = {
 
 // ===== STATE MANAGEMENT =====
 let userProgress = {
-    name: "Learner",
-    avatar: "🚀",
-    completedProblems: [],
-    xp: 0,
-    level: 1,
-    streak: 0,
-    badges: [],
-    lastActive: null,
-    joinDate: null, // Will be set on first load
-    quizScores: {}, // topic -> { bestScore, attempts, totalXP }
   name: "Learner",
   avatar: "🚀",
   completedProblems: [],
@@ -1970,7 +1653,6 @@ let userProgress = {
   quizScores: {}, // topic -> { bestScore, attempts, totalXP }
   bestQuizTimes: {},
   activityData: {}, // date-string -> count (e.g. "2026-06-05" -> 3)
-
 };
 
 applySavedTheme();
@@ -1980,38 +1662,6 @@ applySavedTheme();
 let currentProblem = null;
 
 // ===== INITIALIZATION =====
-document.addEventListener('DOMContentLoaded', () => {
-    console.log('DOMContentLoaded fired, initializing app...');
-    loadUserData();
-    initLoadingScreen();
-    initNavbar();
-    initHeroSection();
-    initTopicsSection();
-    initQuizSection();
-    initPracticeSection();
-    initRoadmap();
-    initDashboard();
-    initGamification();
-    initChatbot();
-    initProfile();
-    initScrollEffects();
-    initDarkMode();
-
-    // Update profile display after loading
-    
-    console.log('App initialization complete');
-
-    // Language change handler for code editor
-    const langSelect = document.getElementById('languageSelect');
-    if (langSelect) {
-        langSelect.addEventListener('change', () => {
-            if (currentProblem) {
-                const editor = document.getElementById('codeEditor');
-                editor.value = getDefaultCode(langSelect.value, currentProblem);
-                editor.dispatchEvent(new Event('input'));
-            }
-        });
-    }
 document.addEventListener("DOMContentLoaded", () => {
 
   loadUserData();
@@ -2062,7 +1712,6 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
   }
-
 
   const saveNotesBtn = document.getElementById("saveNotesBtn");
 
@@ -2551,16 +2200,6 @@ function getDifficultyClass(difficulty) {
 
 // Get quiz topic key from topic object
 function getQuizTopicKey(topic) {
-    const name = topic.name.toLowerCase();
-    // Map topic names to quiz keys
-    const keyMap = {
-        'arrays': 'arrays',
-        'strings': 'strings',
-        'linked list': 'linkedlist',
-        'trees': 'trees',
-        'graphs': 'graphs',
-        'dynamic programming': 'dp',
-        'greedy algorithms': 'greedy'
   const normalize = (s) =>
     String(s)
       .trim()
@@ -2577,7 +2216,6 @@ function getQuizTopicKey(topic) {
       graphs: "graphs",
       "dynamic programming": "dp",
       dp: "dp",
-
     };
     return map[normalize(key)] || null;
   };
@@ -2635,19 +2273,6 @@ function initQuizSection() {
                     <i class="fas fa-play"></i> Start Quiz
                 </button>
             `;
-            quizGrid.appendChild(card);
-            console.log(`Quiz card created for ${topic.name}`);
-
-            // Update progress display
-            updateQuizProgressDisplay(topic);
-
-            // Add click handler
-            
-        });
-        console.log('Quiz Section initialization complete');
-    } catch (error) {
-        console.error('Error initializing quiz section:', error);
-    }
       quizGrid.appendChild(card);
       card.addEventListener("click", () => {
         startQuiz(topicKey);
@@ -2670,23 +2295,8 @@ function initQuizSection() {
   } catch (error) {
     console.error("Error initializing quiz section:", error);
   }
-
 }
-document.addEventListener('click', function (e) {
-    const btn = e.target.closest('.start-quiz-btn');
-    if (!btn) return;
 
-    e.preventDefault();
-    e.stopPropagation();
-
-    const topicKey = btn.dataset.topic;
-    const topic = dsaTopics.find(t => getQuizTopicKey(t) === topicKey);
-
-    if (!topic) return;
-
-    console.log("QUIZ OPEN:", topic.name);
-    startQuiz(topic);
-}, true);
 function updateQuizProgressDisplay(topic) {
   const topicKey = getQuizTopicKey(topic);
   const progressFill = document.getElementById(`progress-${topicKey}`);
@@ -2724,24 +2334,8 @@ function startQuiz(topicKey) {
 
   // Ensure we use the normalized key everywhere below.
   topicKey = normalizedTopicKey;
-    // Header update
-    document.getElementById('topicQuizBadge').textContent = topic.name;
-    document.getElementById('topicQuizDifficulty').textContent = topic.difficulty;
-    document.getElementById('topicQuizTitle').textContent = `${topic.name} Quiz`;
 
-    const prevResult = document.getElementById('topicQuizResult');
-    if (prevResult) prevResult.classList.add('hidden');
 
-    // 🔥 FIX IMPORTANT STATE RESET
-    openQuizModal();
-
-    const loader = document.getElementById('quizLoader');
-    const panel = document.querySelector('.quiz-problem-panel');
-
-    if (loader) loader.classList.add('hidden');
-    if (panel) panel.style.display = 'block';
-
-    renderQuizQuestion();
   const resultEl = document.getElementById("topicQuizResult");
 
   if (resultEl) {
@@ -2765,7 +2359,6 @@ function startQuiz(topicKey) {
   startQuizTimer(topicKey);
 
   renderQuizQuestion();
-
 }
 
 // Fisher-Yates shuffle
@@ -4135,56 +3728,6 @@ window.openRoadmapStepModal = openRoadmapStepModal;
 
 // ===== PROFILE =====
 function initProfile() {
-    var profileName = document.getElementById("profileName");
-    if (profileName) {
-        profileName.textContent = userProgress.name;
-    }
-    
-    // Set joined date
-    var joinDate = document.getElementById("joinDate");
-    if (joinDate) {
-        let joinDateObj;
-        if (userProgress.joinDate) {
-            joinDateObj = new Date(userProgress.joinDate);
-        } else {
-            joinDateObj = new Date();
-            userProgress.joinDate = joinDateObj.toISOString();
-            saveUserData();
-        }
-        joinDate.textContent = joinDateObj.toLocaleDateString("en-US", {
-            month: "long",
-            day: "numeric",
-            year: "numeric"
-        });
-    }
-    
-    // Set current date in dashboard
-    var currentDateElement = document.getElementById("current-date");
-    if (currentDateElement) {
-        var today = new Date();
-        currentDateElement.textContent = "Today: " + today.toLocaleDateString("en-US", {
-            month: "long",
-            day: "numeric",
-            year: "numeric"
-        });
-    }
-    
-    // Set current date in dashboard card
-    var dashboardCurrentDateElement = document.getElementById("dashboard-current-date");
-    if (dashboardCurrentDateElement) {
-        var today = new Date();
-        dashboardCurrentDateElement.textContent = "Today: " + today.toLocaleDateString("en-US", {
-            month: "long",
-            day: "numeric",
-            year: "numeric"
-        });
-    }
-    
-    var avatarIcon = document.querySelector('.avatar-icon');
-    if (avatarIcon) {
-        avatarIcon.textContent = userProgress.avatar || '🚀';
-    }
-    updateProfile();
   var profileName = document.getElementById("profileName") || document.getElementById("profileDashboardName");
   if (profileName) {
     profileName.textContent = userProgress.name;
@@ -4221,7 +3764,6 @@ function initProfile() {
     avatarIcon.textContent = userProgress.avatar || "🚀";
   }
   updateProfile();
-
 }
 
 function updateProfile() {
@@ -5182,22 +4724,6 @@ async function getAuthenticatedSession() {
 }
 
 function loadUserData() {
-    try {
-        const saved = localStorage.getItem('algoInfinityVerse');
-        if (saved) {
-            const data = JSON.parse(saved);
-            userProgress = { ...userProgress, ...data };
-
-            // Ensure quizScores exists
-            if (!userProgress.quizScores) {
-                userProgress.quizScores = {};
-            }
-            
-            // Initialize joinDate if not set
-            if (!userProgress.joinDate) {
-                userProgress.joinDate = new Date().toISOString();
-                saveUserData();
-            }
   try {
     const saved = localStorage.getItem("algoInfinityVerse");
     if (saved) {
@@ -5237,7 +4763,6 @@ function loadUserData() {
         userProgress.activityData = {};
       }
 
-
       // Backfill activity heatmap from existing completed problems
       backfillActivityData();
 
@@ -5251,35 +4776,6 @@ function loadUserData() {
         if (diffDays === 0) {
           // Already active today
         } else {
-
-            // Initialize with some demo data
-            userProgress.name = "Learner";
-            userProgress.avatar = "🚀";
-            userProgress.completedProblems = [1, 2, 10];
-            userProgress.xp = 350;
-            userProgress.level = 2;
-            userProgress.streak = 3;
-            userProgress.badges = [1];
-            userProgress.joinDate = new Date().toISOString();
-            userProgress.quizScores = {};
-            saveUserData();
-        }
-    } catch (error) {
-        console.error('Error loading user data, resetting to defaults:', error);
-        // Reset to defaults
-        userProgress = {
-            name: "Learner",
-            avatar: "🚀",
-            completedProblems: [],
-            xp: 0,
-            level: 1,
-            streak: 0,
-            badges: [],
-            lastActive: null,
-            joinDate: new Date().toISOString(),
-            quizScores: {}
-        };
-
           let daysMissed = diffDays > 0 ? diffDays - 1 : 0;
           while (daysMissed > 0 && userProgress.freezes > 0) {
             userProgress.freezes -= 1;
@@ -5299,7 +4795,6 @@ function loadUserData() {
             }
           }
         }
-
         saveUserData();
       }
     } else {
@@ -5346,11 +4841,7 @@ function loadUserData() {
       updateProfile();
       saveUserData();
     }
-    // Update profile display after loading
-    initProfile();
-
   });
-
 }
 
 // ===== QUIZ EDITOR =====
@@ -6430,48 +5921,6 @@ if (document.readyState === 'loading') {
 // Initialize some animations after page load
 window.addEventListener("load", () => {
 });
-function setJoinDate() {
-    const joinElement = document.getElementById("joinDate");
-
-    if (!joinElement) return;
-
-    const options = {
-        year: "numeric",
-        month: "long",
-        day: "numeric"
-    };
-
-    const today = new Date().toLocaleDateString(undefined, options);
-
-    joinElement.innerText = today;
-}
-
-setJoinDate();
-// ✅ FIX: Current Date feature for dashboard + profile
-
-function updateDate() {
-    const today = new Date();
-
-    const formattedDate = today.toLocaleDateString(undefined, {
-        weekday: "long",
-        year: "numeric",
-        month: "long",
-        day: "numeric"
-    });
-
-    const dashboardDate = document.getElementById("dashboard-current-date");
-    if (dashboardDate) {
-        dashboardDate.textContent = formattedDate;
-    }
-
-    const profileDate = document.getElementById("profile-current-date");
-    if (profileDate) {
-        profileDate.textContent = formattedDate;
-    }
-}
-
-updateDate();
-setInterval(updateDate, 60 * 60 * 1000);
 
 // ===== NEWSLETTER FORM VALIDATION =====
 function validateEmail(email) {
@@ -6622,4 +6071,3 @@ function initBackToTopButtons() {
 }
 
 initBackToTopButtons();
-
