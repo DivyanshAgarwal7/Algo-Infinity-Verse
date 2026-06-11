@@ -48,6 +48,10 @@ body {
   display: none !important;
 }
 
+.hidden {
+  display: none !important;
+}
+
 /* ===== LOADING SCREEN ===== */
 #loading-screen {
   position: fixed;
