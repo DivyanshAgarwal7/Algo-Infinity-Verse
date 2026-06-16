@@ -2558,6 +2558,7 @@ function initQuizSection() {
       console.warn("Quiz grid element not found");
       return;
     }
+    quizGrid.innerHTML = "";
 
     dsaTopics.forEach((topic, index) => {
       const topicKey = getQuizTopicKey(topic);
@@ -2686,7 +2687,7 @@ function startQuiz(topic) {
   document.getElementById("topicQuizCounter").style.display = "block";
   currentQuiz = {
     topic: topicKey,
-    questions: [...topicQuiz],
+    questions: shuffleArray([...questions]),
     currentQuestionIndex: 0,
     score: 0,
     answers: [],
