@@ -1204,10 +1204,10 @@ if (
 }
 
 function resolveStaticPath(pathname) {
-  const routes = {
-    "/": "index.html",
-    "/login": "login.html",
-    "/signup": "signup.html",
+const routes = {
+  "/": "index.html",
+  "/login": "pages/auth/login.html",
+  "/signup": "pages/auth/signup.html",
     "/community": "community.html",
     "/python-learning": "python-learning.html",
     "/javascript-learning": "javascript-learning.html",

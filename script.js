@@ -36,16 +36,7 @@ function handleActiveNav() {
   });
 }
 
-document.addEventListener("submit", function (e) {
-  e.preventDefault();
-  e.stopPropagation();
-  return false;
-}, true);
 window.addEventListener("load", () => {
-  document.addEventListener("submit", (e) => {
-    e.preventDefault();
-  });
-
   document.addEventListener("keydown", (e) => {
     if (e.key === "Enter" && !e.ctrlKey) {
       if (document.activeElement.tagName === "TEXTAREA") {

@@ -87,60 +87,17 @@
 
         <p class="auth-switch">
           Already have an account?
-          <a href="/pages/auth/login.html">Log in</a>
+          <a href="/login">Log in</a>
         </p>
       </section>
     </main>
 
+    <div id="footer-placeholder"></div>
     <script src="/auth.js"></script>
+    <script src="/script.js"></script>
     <script>
-      const menuToggle = document.getElementById("menuToggle");
-      const navLinks = document.getElementById("navLinks");
-
-      let overlay = document.querySelector(".nav-overlay");
-      if (!overlay && menuToggle && navLinks) {
-        overlay = document.createElement("div");
-        overlay.className = "nav-overlay";
-        document.body.appendChild(overlay);
-      }
-
-      const toggleMenu = (open) => {
-        const isOpen =
-          open !== undefined ? open : !navLinks.classList.contains("active");
-        navLinks.classList.toggle("active", isOpen);
-        menuToggle.setAttribute("aria-expanded", isOpen);
-        if (overlay) overlay.classList.toggle("active", isOpen);
-        document.body.style.overflow = isOpen ? "hidden" : "";
-        const icon = menuToggle.querySelector("i");
-        if (icon) {
-          icon.classList.toggle("fa-bars", !isOpen);
-          icon.classList.toggle("fa-times", isOpen);
-        }
-      };
-
-      const closeMenu = () => {
-        if (!navLinks.classList.contains("active")) return;
-        toggleMenu(false);
-      };
-
-      if (menuToggle && navLinks) {
-        menuToggle.addEventListener("click", (e) => {
-          e.stopPropagation();
-          toggleMenu();
-        });
-
-        if (overlay) overlay.addEventListener("click", closeMenu);
-
-        navLinks.querySelectorAll("a").forEach((link) => {
-          link.addEventListener("click", closeMenu);
-        });
-      }
+      loadPartial('navbar-placeholder', '/partials/navbar.html');
+      loadPartial('footer-placeholder', '/partials/footer.html');
     </script>
-  
-  <script>
-    loadPartial('navbar-placeholder', '/partials/navbar.html');
-    loadPartial('footer-placeholder', '/partials/footer.html');
-  </script>
-<script src="/script.js"></script>
-  </body>
+</body>
 </html>

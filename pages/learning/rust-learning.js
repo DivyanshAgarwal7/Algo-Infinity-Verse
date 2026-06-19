@@ -46,44 +46,54 @@ fn main() {
 }`,
 };
 
-const rustEditor = document.getElementById("rustEditor");
-const rustOutput = document.getElementById("rustOutput");
-const rustExampleSelect = document.getElementById("rustExampleSelect");
-const runRustBtn = document.getElementById("runRustBtn");
-const resetRustBtn = document.getElementById("resetRustBtn");
-const clearRustOutputBtn = document.getElementById("clearRustOutputBtn");
+function initRustPlayground() {
+  const rustEditor = document.getElementById("rustEditor");
+  const rustOutput = document.getElementById("rustOutput");
+  const rustExampleSelect = document.getElementById("rustExampleSelect");
+  const runRustBtn = document.getElementById("runRustBtn");
+  const resetRustBtn = document.getElementById("resetRustBtn");
+  const clearRustOutputBtn = document.getElementById("clearRustOutputBtn");
 
-function loadRustExample(exampleKey = "hello") {
-  rustEditor.value = rustExamples[exampleKey];
-  localStorage.setItem("rustCode", rustEditor.value);
+  if (!rustEditor || !rustOutput) return;
+
+  function loadRustExample(exampleKey = "hello") {
+    rustEditor.value = rustExamples[exampleKey];
+    localStorage.setItem("rustCode", rustEditor.value);
+  }
+
+  const savedRustCode = localStorage.getItem("rustCode");
+
+  if (savedRustCode !== null) {
+    rustEditor.value = savedRustCode;
+  } else {
+    loadRustExample("hello");
+  }
+
+  rustEditor.addEventListener("input", () => {
+    localStorage.setItem("rustCode", rustEditor.value);
+  });
+
+  rustExampleSelect?.addEventListener("change", () => {
+    loadRustExample(rustExampleSelect.value);
+  });
+
+  resetRustBtn?.addEventListener("click", () => {
+    loadRustExample(rustExampleSelect?.value);
+  });
+
+  clearRustOutputBtn?.addEventListener("click", () => {
+    rustOutput.textContent = "Output will appear here...";
+  });
+
+  runRustBtn?.addEventListener("click", runRustCode);
 }
 
-const savedRustCode = localStorage.getItem("rustCode");
-
-if (savedRustCode !== null) {
-  rustEditor.value = savedRustCode;
-} else {
-  loadRustExample("hello");
-}
-
-rustEditor.addEventListener("input", () => {
-  localStorage.setItem("rustCode", rustEditor.value);
-});
-
-rustExampleSelect.addEventListener("change", () => {
-  loadRustExample(rustExampleSelect.value);
-});
-
-resetRustBtn.addEventListener("click", () => {
-  loadRustExample(rustExampleSelect.value);
-});
-
-clearRustOutputBtn.addEventListener("click", () => {
-  rustOutput.textContent = "Output will appear here...";
-});
+document.addEventListener("DOMContentLoaded", initRustPlayground);
 
 async function runRustCode() {
-  const code = rustEditor.value.trim();
+  const rustEditor = document.getElementById("rustEditor");
+  const rustOutput = document.getElementById("rustOutput");
+  const code = rustEditor?.value.trim();
 
   if (!code) {
     rustOutput.textContent = "Please write some Rust code first.";
@@ -95,5 +105,3 @@ async function runRustCode() {
     "The playground UI is ready with editor, examples, reset, clear output, and localStorage.\n\n" +
     "To enable execution, configure Judge0, a backend proxy, or self-hosted Piston.";
 }
-
-runRustBtn.addEventListener("click", runRustCode);

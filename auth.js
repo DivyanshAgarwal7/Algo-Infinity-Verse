@@ -451,7 +451,6 @@ function wireDeleteAccount() {
   btn.addEventListener("click", async () => {
     const confirmed = confirm(
       "This action is permanent. Delete account?"
-      "Are you sure you want to deactivate your account?"
     );
 
     if (!confirmed) return;
