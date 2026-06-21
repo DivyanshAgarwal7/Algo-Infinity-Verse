@@ -238,6 +238,9 @@ let userProgress = {
   quizScores: {},
   bestQuizTimes: {},
   activityData: {},
+  xpHistory: [],
+  quizAttempts: [],
+  practiceEvents: [],
   mistakeDna: { offByOneCount: 0, recursionBaseCaseCount: 0, wrongLogicCount: 0, recentLogs: [] },
   revisionSchedule: { arrays: { currentStage: 0, nextReviewDate: null, history: [] }, strings: { currentStage: 0, nextReviewDate: null, history: [] }, linkedlist: { currentStage: 0, nextReviewDate: null, history: [] }, trees: { currentStage: 0, nextReviewDate: null, history: [] }, graphs: { currentStage: 0, nextReviewDate: null, history: [] }, dp: { currentStage: 0, nextReviewDate: null, history: [] } }
 };
@@ -775,6 +778,8 @@ function finishQuiz() {
   const xpEarned = Math.round(score * 10);
   addXP(xpEarned);
   record.totalXP += xpEarned;
+  recordAnalyticsEvent("quiz", { topicKey, score, total, percentage, xpEarned, completionTime });
+  recordDailyActivity(1);
   if (typeof handleQuizCompletionForRevision === "function") handleQuizCompletionForRevision(topicKey, percentage);
   saveUserData();
   document.getElementById("topicQuizQuestionText").style.display = "none";
@@ -807,14 +812,32 @@ function showQuizResults(score, total, percentage, xpEarned, completionTime) {
 function showQuizReview() {
   if (!lastQuizReview || !lastQuizReview.questions || !lastQuizReview.answers) { showNotification("No review data found", "error"); return; }
   const resultEl = document.getElementById("topicQuizResult");
-  let html = `<div class="quiz-review"><h2>📖 Quiz Review</h2>`;
+  const escapeHtml = (value = "") =>
+    String(value)
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&`#39`;");
+
+  // Ensure layout doesn't cut off items: keep scrollable container, and avoid nested flex issues.
+  let html = `<div class="quiz-review"><h2>📖 Quiz Review</h2><div class="quiz-review-container"><div class="quiz-review-items">`;
   lastQuizReview.questions.forEach((q, index) => {
     const answer = lastQuizReview.answers[index] || {};
-    html += `<div class="review-item"><h4>Q${index + 1}. ${q.question}</h4><p><strong>Your Answer:</strong> ${answer.selected !== undefined ? q.options[answer.selected] : "Not Answered"} ${answer.isCorrect ? "✅" : "❌"}</p><p class="correct-answer"><strong>Correct Answer:</strong> ${q.options[q.correct]}</p><p><strong>Explanation:</strong> ${q.explanation}</p></div>`;
+    const yourAnswerText = answer.selected !== undefined ? q.options[answer.selected] : "Not Answered";
+    const correctnessIcon = answer.isCorrect ? "✅" : "❌";
+    html += `<div class="review-item"><h4>Q${index + 1}. ${escapeHtml(q.question)}</h4><p><strong>Your Answer:</strong> ${escapeHtml(yourAnswerText)} ${correctnessIcon}</p><p class="correct-answer"><strong>Correct Answer:</strong> ${escapeHtml(q.options[q.correct])}</p><p><strong>Explanation:</strong> ${escapeHtml(q.explanation)}</p></div>`;
   });
-  html += `<button class="btn btn-primary" onclick="restoreQuizResults()">Back</button><button class="btn btn-secondary" onclick="closeQuizModal()">Close</button></div>`;
+  html += `</div></div><div class="quiz-actions" style="border-top:none; justify-content:space-between; padding-top:1.25rem; background:transparent;">
+    <button class="btn btn-primary" onclick="restoreQuizResults()">Back</button>
+    <button class="btn btn-secondary" onclick="closeQuizModal()">Close</button>
+  </div></div>`;
   resultEl.innerHTML = html;
+  // If the user re-opens review, scroll to the top of the review list.
+  const container = resultEl.querySelector('.quiz-review-container');
+  if (container) container.scrollTop = 0;
 }
+
 
 function restoreQuizResults() {
   if (!lastQuizResultData) return;
@@ -1086,16 +1109,26 @@ const advancedRoadmapSteps = [
 let roadmapTabsInitialized = false;
 let currentQuizAnswers = {};
 
+/* Temporarily disabled because roadmapAdvancedTab is not present in the current HTML structure.*/
 function initRoadmap() {
   if (!roadmapTabsInitialized) {
     const basicTab = document.getElementById("roadmapBasicTab");
-    const advancedTab = document.getElementById("roadmapAdvancedTab");
+    //const advancedTab = document.getElementById("roadmapAdvancedTab");
     const overviewTab = document.getElementById("roadmapOverviewTab");
-    if (basicTab && advancedTab && overviewTab) {
-      basicTab.addEventListener("click", () => { basicTab.classList.add("active"); advancedTab.classList.remove("active"); overviewTab.classList.remove("active"); document.getElementById("basicRoadmapContainer").classList.add("active"); document.getElementById("advancedRoadmapContainer").classList.remove("active"); document.getElementById("overviewRoadmapContainer").classList.remove("active"); });
-      advancedTab.addEventListener("click", () => { advancedTab.classList.add("active"); basicTab.classList.remove("active"); overviewTab.classList.remove("active"); document.getElementById("advancedRoadmapContainer").classList.add("active"); document.getElementById("basicRoadmapContainer").classList.remove("active"); document.getElementById("overviewRoadmapContainer").classList.remove("active"); });
-      overviewTab.addEventListener("click", () => { overviewTab.classList.add("active"); basicTab.classList.remove("active"); advancedTab.classList.remove("active"); document.getElementById("overviewRoadmapContainer").classList.add("active"); document.getElementById("basicRoadmapContainer").classList.remove("active"); document.getElementById("advancedRoadmapContainer").classList.remove("active"); });
-    }
+    //if (basicTab && advancedTab && overviewTab) {
+    if (basicTab && overviewTab) {
+      basicTab.addEventListener("click", () => { basicTab.classList.add("active"); 
+        //advancedTab.classList.remove("active"); 
+        overviewTab.classList.remove("active"); 
+        document.getElementById("basicRoadmapContainer").classList.add("active"); 
+        //document.getElementById("advancedRoadmapContainer").classList.remove("active"); 
+        document.getElementById("overviewRoadmapContainer").classList.remove("active"); });
+      /*advancedTab.addEventListener("click", () => { advancedTab.classList.add("active"); basicTab.classList.remove("active"); overviewTab.classList.remove("active"); document.getElementById("advancedRoadmapContainer").classList.add("active"); document.getElementById("basicRoadmapContainer").classList.remove("active"); document.getElementById("overviewRoadmapContainer").classList.remove("active"); });*/
+      overviewTab.addEventListener("click", () => { overviewTab.classList.add("active"); basicTab.classList.remove("active"); 
+        //advancedTab.classList.remove("active"); 
+        document.getElementById("overviewRoadmapContainer").classList.add("active"); document.getElementById("basicRoadmapContainer").classList.remove("active"); 
+        //document.getElementById("advancedRoadmapContainer").classList.remove("active"); });
+    });
     const closeBtn = document.getElementById("roadmapStepModalClose");
     const closeBtn2 = document.getElementById("roadmapStepModalCloseBtn");
     const modal = document.getElementById("roadmapStepModal");
@@ -1105,7 +1138,7 @@ function initRoadmap() {
     roadmapTabsInitialized = true;
   }
   renderBasicRoadmap();
-  renderAdvancedRoadmap();
+  //renderAdvancedRoadmap();
   const progressBar = document.getElementById("roadmapProgress");
   const stages = document.querySelectorAll(".stage");
   if (progressBar && stages.length >= 3) {
@@ -1117,6 +1150,7 @@ function initRoadmap() {
       if (progress === 100) stages[2].classList.add("active");
     }, 500);
   }
+}
 }
 
 function isRoadmapStepCompleted(step) {
@@ -1404,7 +1438,7 @@ function initDailyChallenge() {
   });
 }
 
-function addXP(amount) { userProgress.xp += amount; checkLevelUp(); saveUserData(); }
+function addXP(amount, source = "general", meta = {}) { userProgress.xp += amount; recordAnalyticsEvent("xp", { amount, source, ...meta }); checkLevelUp(); saveUserData(); }
 
 function checkLevelUp() {
   const levels = [0, 1000, 2500, 5000, 10000, 20000, 50000, 100000];
@@ -1573,6 +1607,30 @@ function saveUserData() {
   catch (e) { console.warn("Could not save user data:", e); }
 }
 
+function ensureAnalyticsCollections() {
+  if (!Array.isArray(userProgress.xpHistory)) userProgress.xpHistory = [];
+  if (!Array.isArray(userProgress.quizAttempts)) userProgress.quizAttempts = [];
+  if (!Array.isArray(userProgress.practiceEvents)) userProgress.practiceEvents = [];
+}
+
+function recordAnalyticsEvent(type, payload = {}) {
+  ensureAnalyticsCollections();
+  const entry = { type, timestamp: new Date().toISOString(), ...payload };
+
+  if (type === "xp") {
+    userProgress.xpHistory.push(entry);
+    if (userProgress.xpHistory.length > 120) userProgress.xpHistory = userProgress.xpHistory.slice(-120);
+  } else if (type === "quiz") {
+    userProgress.quizAttempts.push(entry);
+    if (userProgress.quizAttempts.length > 120) userProgress.quizAttempts = userProgress.quizAttempts.slice(-120);
+  } else if (type === "practice") {
+    userProgress.practiceEvents.push(entry);
+    if (userProgress.practiceEvents.length > 200) userProgress.practiceEvents = userProgress.practiceEvents.slice(-200);
+  }
+
+  return entry;
+}
+
 let cachedSession = null;
 let progressSyncTimer = null;
 
@@ -1602,11 +1660,11 @@ async function getAuthenticatedSession() {
 function loadUserData() {
   try {
     const saved = localStorage.getItem("algoInfinityVerse");
-    if (saved) { const data = JSON.parse(saved); Object.assign(userProgress, data); if (!userProgress.quizScores) userProgress.quizScores = {}; if (!userProgress.completedRoadmapSteps) userProgress.completedRoadmapSteps = []; if (!userProgress.activityData) userProgress.activityData = {}; if (!userProgress.codingPersonality) userProgress.codingPersonality = { type: "brute-force first", bruteForceCount: 1, slowAccurateCount: 0, greedyCount: 0, overOptimizerCount: 0 }; if (!userProgress.mistakeDna) userProgress.mistakeDna = { offByOneCount: 0, recursionBaseCaseCount: 0, wrongLogicCount: 0, recentLogs: [] }; backfillActivityData(); }
-    else { userProgress = { name: "Learner", avatar: "🚀", completedProblems: [], completedDailyChallenges: [], codingPersonality: { type: "brute-force first", bruteForceCount: 1, slowAccurateCount: 0, greedyCount: 0, overOptimizerCount: 0 }, favoriteProblems: [], recentProblems: [], problemNotes: {}, xp: 0, level: 1, streak: 0, freezes: 0, freezeHistory: [], badges: [], completedRoadmapSteps: [], lastActive: null, quizScores: {}, bestQuizTimes: {}, activityData: {}, mistakeDna: { offByOneCount: 0, recursionBaseCaseCount: 0, wrongLogicCount: 0, recentLogs: [] }, revisionSchedule: { arrays: { currentStage: 0, nextReviewDate: null, history: [] }, strings: { currentStage: 0, nextReviewDate: null, history: [] }, linkedlist: { currentStage: 0, nextReviewDate: null, history: [] }, trees: { currentStage: 0, nextReviewDate: null, history: [] }, graphs: { currentStage: 0, nextReviewDate: null, history: [] }, dp: { currentStage: 0, nextReviewDate: null, history: [] } } }; saveUserData(); }
-  } catch (e) { console.error("Error loading user data:", e); userProgress = { name: "Learner", avatar: "🚀", completedProblems: [], completedDailyChallenges: [], codingPersonality: { type: "brute-force first", bruteForceCount: 1, slowAccurateCount: 0, greedyCount: 0, overOptimizerCount: 0 }, favoriteProblems: [], recentProblems: [], problemNotes: {}, xp: 0, level: 1, streak: 0, freezes: 0, freezeHistory: [], badges: [], completedRoadmapSteps: [], lastActive: null, quizScores: {}, bestQuizTimes: {}, activityData: {}, mistakeDna: { offByOneCount: 0, recursionBaseCaseCount: 0, wrongLogicCount: 0, recentLogs: [] }, revisionSchedule: { arrays: { currentStage: 0, nextReviewDate: null, history: [] }, strings: { currentStage: 0, nextReviewDate: null, history: [] }, linkedlist: { currentStage: 0, nextReviewDate: null, history: [] }, trees: { currentStage: 0, nextReviewDate: null, history: [] }, graphs: { currentStage: 0, nextReviewDate: null, history: [] }, dp: { currentStage: 0, nextReviewDate: null, history: [] } } }; saveUserData(); }
+    if (saved) { const data = JSON.parse(saved); Object.assign(userProgress, data); if (!userProgress.quizScores) userProgress.quizScores = {}; if (!userProgress.completedRoadmapSteps) userProgress.completedRoadmapSteps = []; if (!userProgress.activityData) userProgress.activityData = {}; if (!userProgress.xpHistory) userProgress.xpHistory = []; if (!userProgress.quizAttempts) userProgress.quizAttempts = []; if (!userProgress.practiceEvents) userProgress.practiceEvents = []; if (!userProgress.codingPersonality) userProgress.codingPersonality = { type: "brute-force first", bruteForceCount: 1, slowAccurateCount: 0, greedyCount: 0, overOptimizerCount: 0 }; if (!userProgress.mistakeDna) userProgress.mistakeDna = { offByOneCount: 0, recursionBaseCaseCount: 0, wrongLogicCount: 0, recentLogs: [] }; backfillActivityData(); }
+    else { userProgress = { name: "Learner", avatar: "🚀", completedProblems: [], completedDailyChallenges: [], codingPersonality: { type: "brute-force first", bruteForceCount: 1, slowAccurateCount: 0, greedyCount: 0, overOptimizerCount: 0 }, favoriteProblems: [], recentProblems: [], problemNotes: {}, xp: 0, level: 1, streak: 0, freezes: 0, freezeHistory: [], badges: [], completedRoadmapSteps: [], lastActive: null, quizScores: {}, bestQuizTimes: {}, activityData: {}, xpHistory: [], quizAttempts: [], practiceEvents: [], mistakeDna: { offByOneCount: 0, recursionBaseCaseCount: 0, wrongLogicCount: 0, recentLogs: [] }, revisionSchedule: { arrays: { currentStage: 0, nextReviewDate: null, history: [] }, strings: { currentStage: 0, nextReviewDate: null, history: [] }, linkedlist: { currentStage: 0, nextReviewDate: null, history: [] }, trees: { currentStage: 0, nextReviewDate: null, history: [] }, graphs: { currentStage: 0, nextReviewDate: null, history: [] }, dp: { currentStage: 0, nextReviewDate: null, history: [] } } }; saveUserData(); }
+  } catch (e) { console.error("Error loading user data:", e); userProgress = { name: "Learner", avatar: "🚀", completedProblems: [], completedDailyChallenges: [], codingPersonality: { type: "brute-force first", bruteForceCount: 1, slowAccurateCount: 0, greedyCount: 0, overOptimizerCount: 0 }, favoriteProblems: [], recentProblems: [], problemNotes: {}, xp: 0, level: 1, streak: 0, freezes: 0, freezeHistory: [], badges: [], completedRoadmapSteps: [], lastActive: null, quizScores: {}, bestQuizTimes: {}, activityData: {}, xpHistory: [], quizAttempts: [], practiceEvents: [], mistakeDna: { offByOneCount: 0, recursionBaseCaseCount: 0, wrongLogicCount: 0, recentLogs: [] }, revisionSchedule: { arrays: { currentStage: 0, nextReviewDate: null, history: [] }, strings: { currentStage: 0, nextReviewDate: null, history: [] }, linkedlist: { currentStage: 0, nextReviewDate: null, history: [] }, trees: { currentStage: 0, nextReviewDate: null, history: [] }, graphs: { currentStage: 0, nextReviewDate: null, history: [] }, dp: { currentStage: 0, nextReviewDate: null, history: [] } } }; saveUserData(); }
   updateProfile();
-  getAuthenticatedSession().then(session => { if (session?.user?.name) { userProgress.name = session.user.name; updateProfile(); saveUserData(); } initProfile(); });
+  getAuthenticatedSession().then(session => { if (session?.user?.name) { userProgress.name = session.user.name; updateProfile(); saveUserData(); } else { userProgress.name = "Learner"; updateProfile(); saveUserData(); } initProfile(); });
 }
 
 // ============================================
@@ -1617,6 +1675,7 @@ function recordDailyActivity(problemCount = 1) {
   const today = new Date();
   const dateKey = formatDateKey(today);
   userProgress.activityData[dateKey] = (userProgress.activityData[dateKey] || 0) + problemCount;
+  recordAnalyticsEvent("practice", { dateKey, problemCount });
 }
 
 function backfillActivityData() {
