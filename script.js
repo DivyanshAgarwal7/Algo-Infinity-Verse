@@ -994,10 +994,48 @@ function renderProblemCards(problems) {
     return `<div class="problem-card animate-in" data-id="${problem.id}"><div class="problem-header"><h3 class="problem-title">${recBadge}${problem.title}</h3><div class="problem-actions"><button class="favorite-btn ${isFavorite ? 'active' : ''}" data-id="${problem.id}" aria-label="Favorite problem"><i class="fas fa-heart"></i></button><button class="notes-btn ${hasNotes ? 'has-notes' : ''}" data-id="${problem.id}" aria-label="Problem notes"><i class="fas fa-sticky-note"></i></button><span class="difficulty-badge ${problem.difficulty}">${problem.difficulty}</span></div></div><div class="problem-tags">${problem.tags.map(tag => `<span class="tag">${tag}</span>`).join("")}</div><div class="problem-meta"><span class="acceptance-rate"><i class="fas fa-users"></i> ${problem.acceptance} acceptance</span>${isCompleted ? '<span class="completed-badge"><i class="fas fa-check"></i> Completed</span>' : ''}</div></div>`;
   }).join("");
   
-  addProblemCardEventListeners(problemsGrid);
+  // Use event delegation for problem cards (listeners are attached once).
+  if (!problemsGrid.dataset.listenersAttached) {
+    attachProblemGridEventDelegation(problemsGrid);
+    problemsGrid.dataset.listenersAttached = "true";
+  }
 }
 
-// Add event listeners to problem cards
+// Attach event listeners once using delegation
+function attachProblemGridEventDelegation(grid) {
+  if (!grid) return;
+
+  grid.addEventListener("click", (e) => {
+    const favoriteBtn = e.target.closest(".favorite-btn");
+    if (favoriteBtn && grid.contains(favoriteBtn)) {
+      e.stopPropagation();
+      e.preventDefault();
+      const problemId = parseInt(favoriteBtn.dataset.id);
+      toggleFavorite(problemId);
+      renderProblems();
+      return;
+    }
+
+    const notesBtn = e.target.closest(".notes-btn");
+    if (notesBtn && grid.contains(notesBtn)) {
+      e.stopPropagation();
+      e.preventDefault();
+      const problemId = parseInt(notesBtn.dataset.id);
+      currentNotesProblemId = problemId;
+      openNotesModal(problemId);
+      return;
+    }
+
+    const card = e.target.closest(".problem-card");
+    if (card && grid.contains(card)) {
+      const problemId = parseInt(card.dataset.id);
+      handleProblemClick(problemId);
+    }
+  });
+}
+
+
+// Legacy: addProblemCardEventListeners kept for compatibility, but no longer used
 function addProblemCardEventListeners(grid) {
   grid.querySelectorAll(".favorite-btn").forEach((btn) => {
     btn.addEventListener("click", (e) => {
