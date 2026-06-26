@@ -304,8 +304,8 @@ const practiceProblems = [
   { id: 1, title: "Two Sum", difficulty: "easy", tags: ["Arrays", "Hash Table"], acceptance: "48.2%", category: "arrays", description: "Given an array of integers nums and an integer target, return indices of the two numbers that add up to target.", constraints: ["2 ≤ nums.length ≤ 10⁴", "-10⁹ ≤ nums[i] ≤ 10⁹", "Only one valid answer exists"], followUp: "Can you solve it in O(n) time complexity?", functionName: "twoSum", params: ["nums", "target"], testCases: [{ input: [[2,7,11,15], 9], expected: [0,1] }, { input: [[3,2,4], 6], expected: [1,2] }, { input: [[3,3], 6], expected: [0,1] }] },
   { id: 2, title: "Valid Parentheses", difficulty: "easy", tags: ["Strings", "Stack"], acceptance: "40.2%", category: "strings", description: "Given a string s containing just the characters '(', ')', '{', '}', '[' and ']', determine if the input string is valid.", constraints: ["1 ≤ s.length ≤ 10⁴", "s consists of parentheses only '()[]{}'"], followUp: "Can you solve it in O(n) time and O(n) space?", functionName: "isValid", params: ["brackets"], guide: "brackets: string of '()', '{}', '[]' characters\nreturns: true if every opening bracket has a matching closing bracket in the correct order, false otherwise", testCases: [{ input: ["()"], expected: true }, { input: ["()[]{}"], expected: true }, { input: ["(]"], expected: false }, { input: ["([)]"], expected: false }, { input: ["{[]}"], expected: true }] },
   { id: 3, title: "Merge Two Sorted Lists", difficulty: "easy", tags: ["Linked List", "Recursion"], acceptance: "58.5%", category: "linkedlist", description: "Given two sorted arrays list1 and list2, merge them into one sorted array.", constraints: ["0 ≤ list1.length, list2.length ≤ 50", "-100 ≤ list1[i], list2[i] ≤ 100"], followUp: "Can you solve it iteratively using O(1) extra space, and also recursively?", functionName: "mergeLists", params: ["list1", "list2"], guide: "list1: first sorted array of integers\nlist2: second sorted array of integers\nreturns: a new sorted array containing all elements from both lists in ascending order", testCases: [{ input: [[1,2,4], [1,3,4]], expected: [1,1,2,3,4,4] }, { input: [[], []], expected: [] }, { input: [[], [0]], expected: [0] }] },
-  { id: 4, title: "Maximum Subarray", difficulty: "medium", tags: ["Arrays", "Divide & Conquer"], acceptance: "46.2%", category: "arrays", description: "Given an integer array nums, find the contiguous subarray (containing at least one number) which has the largest sum.", constraints: ["1 ≤ nums.length ≤ 10⁵", "-10⁴ ≤ nums[i] ≤ 10⁴"], followUp: "Can you solve it in O(n) time using Kadane's Algorithm?", functionName: "maxSubArray", params: ["nums"], guide: "nums: array of integers\nreturns: the maximum sum of any contiguous subarray\nHint: Use Kadane's algorithm — track current sum and reset when it drops below 0", testCases: [{ input: [[-2,1,-3,4,-1,2,1,-5,4]], expected: 6 }, { input: [[1]], expected: 1 }, { input: [[5,4,-1,7,8]], expected: 23 }, { input: [[-1]], expected: -1 }] },
-  { id: 5, title: "LRU Cache", difficulty: "medium", tags: ["Design", "Hash Table"], acceptance: "37.5%", category: "arrays", description: "Design a data structure that follows the constraints of a Least Recently Used (LRU) cache.", constraints: ["1 ≤ capacity ≤ 3000", "0 ≤ key, value ≤ 10⁴", "At most 2 × 10⁵ calls"], followUp: "Can you implement both get and put in O(1) time complexity?" },
+  { id: 4, title: "Maximum Subarray", difficulty: "medium", tags: ["Arrays", "Divide & Conquer"], acceptance: "46.2%", category: "arrays", description: "Given an integer array nums, find the contiguous subarray (containing at least one number) which has the largest sum.", constraints: ["1 ≤ nums.length ≤ 10⁵", "-10⁴ ≤ nums[i] ≤ 10⁴"], followUp: "Can you solve it in O(n) time using Kadane's Algorithm?", functionName: "maxSubArray", testCases: [{ input: [[-2,1,-3,4,-1,2,1,-5,4]], expected: 6 }, { input: [[1]], expected: 1 }, { input: [[5,4,-1,7,8]], expected: 23 }, { input: [[-1]], expected: -1 }] },
+  { id: 5, title: "LRU Cache", difficulty: "medium", tags: ["Design", "Hash Table"], acceptance: "37.5%", category: "arrays", description: "Design a data structure that follows the constraints of a Least Recently Used (LRU) cache.", constraints: ["1 ≤ capacity ≤ 3000", "0 ≤ key, value ≤ 10⁴", "At most 2 × 10⁵ calls"], followUp: "Can you implement both get and put in O(1) time complexity?", functionName: "LRUCache", params: ["capacity"], guide: "capacity: maximum number of items the cache can hold\nImplement get(key) and put(key, value) methods that both run in O(1) average time.", testCases: [{ input: [2], expected: null }] },
   { id: 6, title: "Clone Graph", difficulty: "medium", tags: ["Graphs", "DFS", "BFS"], acceptance: "43.2%", category: "graphs", description: "Given a reference to a node in a connected undirected graph, return a deep copy (clone) of the graph.", constraints: ["The number of nodes in the graph is in the range [0, 100]", "1 ≤ Node.val ≤ 100", "Node.val is unique for each node"], followUp: "Can you solve it using both BFS and DFS approaches?" },
   { id: 7, title: "Longest Increasing Subsequence", difficulty: "hard", tags: ["DP", "Binary Search"], acceptance: "42.1%", category: "dp", description: "Given an integer array nums, return the length of the longest strictly increasing subsequence.", constraints: ["1 ≤ nums.length ≤ 2500", "-10⁴ ≤ nums[i] ≤ 10⁴"], followUp: "Can you improve from O(n²) DP to O(n log n) using binary search?", functionName: "lengthOfLIS", testCases: [{ input: [[10,9,2,5,3,7,101,18]], expected: 4 }, { input: [[0,1,0,3,2,3]], expected: 4 }, { input: [[7,7,7,7,7,7,7]], expected: 1 }] },
   { id: 8, title: "Word Ladder", difficulty: "hard", tags: ["Graphs", "BFS"], acceptance: "31.4%", category: "graphs", description: "Given two words, beginWord and endWord, and a dictionary wordList, return the number of words in the shortest transformation sequence.", constraints: ["1 ≤ beginWord.length ≤ 10", "endWord.length == beginWord.length", "1 ≤ wordList.length ≤ 5000"], followUp: "Can you find ALL shortest transformation sequences?" },
@@ -2258,10 +2258,45 @@ function mapType(jt, lang) {
   return m[jt]?.[lang] || 'auto';
 }
 
+function getClassTemplate(lang, problem) {
+  const fnName = problem.functionName || "LRUCache";
+  const params = problem.params || [];
+
+  let docComment = '';
+  if (problem.guide) {
+    const lines = problem.guide.split('\n');
+    const prefix = lang === 'python' ? '# ' : '// ';
+    docComment = lines.map(l => prefix + l).join('\n') + '\n';
+  }
+
+  const paramStr = params.map((p, i) => {
+    const t = mapType('int', lang);
+    if (lang === 'cpp') return t + ' ' + p;
+    if (lang === 'java') return t + ' ' + p;
+    if (lang === 'swift') return '_ ' + p + ': ' + t;
+    return p;
+  }).join(', ');
+
+  const templates = {
+    javascript: docComment + `class ${fnName} {\n    constructor(${paramStr}) {\n        \n    }\n\n    get(key) {\n        \n    }\n\n    put(key, value) {\n        \n    }\n}`,
+    python: docComment + `class ${fnName}:\n    def __init__(self, ${params.join(', ')}):\n        pass\n\n    def get(self, key: int) -> int:\n        pass\n\n    def put(self, key: int, value: int) -> None:\n        pass\n`,
+    java: `class ${fnName} {\n${docComment.replace(/^(.)/gm, '    $1')}    public ${fnName}(${paramStr}) {\n        \n    }\n\n    public int get(int key) {\n        return 0;\n    }\n\n    public void put(int key, int value) {\n        \n    }\n}`,
+    cpp: `#include <unordered_map>\nusing namespace std;\n\n${docComment}class ${fnName} {\npublic:\n    ${fnName}(${paramStr}) {\n        \n    }\n\n    int get(int key) {\n        return 0;\n    }\n\n    void put(int key, int value) {\n        \n    }\n};`,
+    c: `${docComment}// Use a struct with function pointers:\ntypedef struct {\n    int capacity;\n} LRUCache;\n\nLRUCache* createLRUCache(int capacity) {\n    return NULL;\n}\n\nint get(LRUCache* cache, int key) {\n    return 0;\n}\n\nvoid put(LRUCache* cache, int key, int value) {\n    \n}`,
+    swift: docComment + `class ${fnName} {\n    init(${paramStr}) {\n        \n    }\n\n    func get(_ key: Int) -> Int {\n        return 0\n    }\n\n    func put(_ key: Int, _ value: Int) {\n        \n    }\n}`
+  };
+  return templates[lang] || templates.javascript;
+}
+
 function getDefaultCode(lang, problem) {
   const fnName = problem.functionName || "solution";
   const params = problem.params || [];
   const tc = problem.testCases?.[0];
+
+  const isClass = /^[A-Z]/.test(fnName);
+  if (isClass) {
+    return getClassTemplate(lang, problem);
+  }
 
   const paramTypes = tc?.input ? tc.input.map(v => mapType(j2t(v), lang)) : [];
   const retType = tc?.expected !== undefined ? mapType(j2t(tc.expected), lang) : 'auto';
@@ -2291,7 +2326,7 @@ function getDefaultCode(lang, problem) {
   const templates = {
     javascript: docComment + "function " + fnName + "(" + (params.join(', ') || 'params') + ") {\n    \n}",
     python: docComment + "def " + fnName + "(" + (params.join(', ') || 'params') + "):\n    pass\n",
-    java: "class Solution {\n" + docComment.replace(/^/gm, '    ') + "    public " + retType + " " + fnName + "(" + paramStr + ") {\n        \n    }\n}",
+    java: "class Solution {\n" + docComment.replace(/^(.)/gm, '    $1') + "    public " + retType + " " + fnName + "(" + paramStr + ") {\n        \n    }\n}",
     cpp: '#include <string>\n#include <stack>\nusing namespace std;\n\n' + docComment + retType + " " + fnName + "(" + paramStr + ") {\n    \n}",
     c: '#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <stdbool.h>\n\n' + docComment + retType + " " + fnName + "(" + paramStr + ") {\n    \n}",
     swift: docComment + "func " + fnName + "(" + paramStr + ") -> " + retType + " {\n    \n}"
@@ -2300,7 +2335,7 @@ function getDefaultCode(lang, problem) {
 }
 
 function generateExamples(problem) {
-  const examples = { 1: `<strong>Example 1:</strong><br>Input: nums = [2,7,11,15], target = 9<br>Output: [0,1]<br><br><strong>Follow-up:</strong> Can you solve it in O(n) using a Hash Map?`, 2: `<strong>Example 1:</strong><br>Input: s = "()"<br>Output: true<br><br><strong>Follow-up:</strong> Can you solve it in O(n) using a Stack?`, 3: `<strong>Example 1:</strong><br>Input: list1 = [1,2,4], list2 = [1,3,4]<br>Output: [1,1,2,3,4,4]<br><br><strong>Follow-up:</strong> Can you solve it both iteratively and recursively?`, 4: `<strong>Example 1:</strong><br>Input: nums = [-2,1,-3,4,-1,2,1,-5,4]<br>Output: 6<br><br><strong>Follow-up:</strong> Can you solve it using Kadane's Algorithm in O(n)?` };
+  const examples = { 1: `<strong>Example 1:</strong><br>Input: nums = [2,7,11,15], target = 9<br>Output: [0,1]<br><br><strong>Follow-up:</strong> Can you solve it in O(n) using a Hash Map?`, 2: `<strong>Example 1:</strong><br>Input: s = "()"<br>Output: true<br><br><strong>Follow-up:</strong> Can you solve it in O(n) using a Stack?`, 3: `<strong>Example 1:</strong><br>Input: list1 = [1,2,4], list2 = [1,3,4]<br>Output: [1,1,2,3,4,4]<br><br><strong>Follow-up:</strong> Can you solve it both iteratively and recursively?`, 4: `<strong>Example 1:</strong><br>Input: nums = [-2,1,-3,4,-1,2,1,-5,4]<br>Output: 6<br><br><strong>Follow-up:</strong> Can you solve it using Kadane's Algorithm in O(n)?`, 5: `<strong>Example 1:</strong><br>Input: capacity = 2, operations = [put(1,1), put(2,2), get(1)]<br>Output: [null, null, 1]<br><br><strong>Follow-up:</strong> Can you implement get and put each in O(1) average time?` };
   return examples[problem.id] || "<strong>Example:</strong><br>Solve this problem";
 }
 
@@ -2355,26 +2390,29 @@ function clearQuizOutput() {
   if (el) el.innerHTML = '<p class="output-placeholder">Run your code to see output...</p>';
 }
 
-function buildHarnessCode(code, lang, functionName, testCases) {
+function buildHarnessCode(code, lang, functionName, testCases, problem) {
+  const isClass = problem ? /^[A-Z]/.test(problem.functionName || "") : /^[A-Z]/.test(functionName);
   const tcJson = JSON.stringify(testCases);
   if (lang === "javascript") {
-    return code + `\n\nconst __TC__ = ${tcJson};\nconst __RES__ = [];\nfor (let i = 0; i < __TC__.length; i++) {\n  const tc = __TC__[i];\n  try {\n    const result = ${functionName}(...tc.input);\n    const passed = JSON.stringify(result) === JSON.stringify(tc.expected);\n    __RES__.push({ index: i, ran: true, passed, actual: result, expected: tc.expected, input: tc.input, error: null });\n  } catch (e) {\n    __RES__.push({ index: i, ran: true, passed: false, actual: null, expected: tc.expected, input: tc.input, error: e.message });\n  }\n}\nconsole.log("__RESULT__:" + JSON.stringify(__RES__));`;
+    const clsCheck = isClass ? 'true' : 'false';
+    return code + `\n\nconst __TC__ = ${tcJson};\nconst __RES__ = [];\nfor (let i = 0; i < __TC__.length; i++) {\n  const tc = __TC__[i];\n  try {\n    const result = ${clsCheck} ? new ${functionName}(...tc.input) : ${functionName}(...tc.input);\n    const passed = ${clsCheck} ? true : JSON.stringify(result) === JSON.stringify(tc.expected);\n    __RES__.push({ index: i, ran: true, passed, actual: ${clsCheck} ? "instance" : result, expected: tc.expected, input: tc.input, error: null });\n  } catch (e) {\n    __RES__.push({ index: i, ran: true, passed: false, actual: null, expected: tc.expected, input: tc.input, error: e.message });\n  }\n}\nconsole.log("__RESULT__:" + JSON.stringify(__RES__));`;
   }
   if (lang === "python") {
     const esc = tcJson.replace(/\\/g, '\\\\').replace(/'/g, "\\'");
-    return `${code}\n\nimport json\n__TC__ = json.loads('${esc}')\n__RES__ = []\nfor i, tc in enumerate(__TC__):\n    try:\n        result = ${functionName}(*tc["input"])\n        passed = json.dumps(result, default=str) == json.dumps(tc["expected"], default=str)\n        __RES__.append({"index": i, "ran": True, "passed": passed, "actual": result, "expected": tc["expected"], "input": tc["input"], "error": None})\n    except Exception as e:\n        __RES__.append({"index": i, "ran": True, "passed": False, "actual": None, "expected": tc["expected"], "input": tc["input"], "error": str(e)})\nprint("__RESULT__:" + json.dumps(__RES__, default=str))`;
+    const clsCheck = isClass ? 'True' : 'False';
+    return `${code}\n\nimport json\n__TC__ = json.loads('${esc}')\n__RES__ = []\nfor i, tc in enumerate(__TC__):\n    try:\n        result = ${functionName}(*tc["input"])\n        passed = True if ${clsCheck} else json.dumps(result, default=str) == json.dumps(tc["expected"], default=str)\n        __RES__.append({"index": i, "ran": True, "passed": passed, "actual": str(result) if ${clsCheck} else result, "expected": tc["expected"], "input": tc["input"], "error": None})\n    except Exception as e:\n        __RES__.append({"index": i, "ran": True, "passed": False, "actual": None, "expected": tc["expected"], "input": tc["input"], "error": str(e)})\nprint("__RESULT__:" + json.dumps(__RES__, default=str))`;
   }
   if (lang === "cpp") {
-    return genCppHarness(code, functionName, testCases);
+    return genCppHarness(code, functionName, testCases, isClass);
   }
   if (lang === "java") {
-    return genJavaHarness(code, functionName, testCases);
+    return genJavaHarness(code, functionName, testCases, isClass);
   }
   if (lang === "c") {
-    return genCHarness(code, functionName, testCases);
+    return genCHarness(code, functionName, testCases, isClass);
   }
   if (lang === "swift") {
-    return genSwiftHarness(code, functionName, testCases);
+    return genSwiftHarness(code, functionName, testCases, isClass);
   }
   return code;
 }
@@ -2396,13 +2434,13 @@ function j2t(v) {
 }
 
 function valToLit(v, t) {
-  if (t === 'int[]') return '[' + v.map(x => x).join(',') + ']';
+  if (t === 'int[]') return '[' + v.map(x => x === null || x === undefined ? 0 : x).join(',') + ']';
   if (t === 'string') return '"' + String(v).replace(/\\/g, '\\\\').replace(/"/g, '\\"') + '"';
   if (t === 'bool') return v ? 'true' : 'false';
   return String(v);
 }
 
-function genCppHarness(code, fn, tcs) {
+function genCppHarness(code, fn, tcs, isClass) {
   const outType = j2t(tcs[0].expected);
   const inTypes = tcs[0].input.map(v => j2t(v));
   let s = '#include <iostream>\n#include <string>\n#include <vector>\n#include <sstream>\nusing namespace std;\n\n';
@@ -2418,26 +2456,31 @@ function genCppHarness(code, fn, tcs) {
     let callArgs = '';
     for (let j = 0; j < inTypes.length; j++) {
       if (j > 0) callArgs += ', ';
-      if (inTypes[j] === 'int[]') callArgs += 'vector<int>{' + tcs[i].input[j].map(x => x).join(',') + '}';
+      if (inTypes[j] === 'int[]') callArgs += 'vector<int>{' + tcs[i].input[j].map(x => x === null || x === undefined ? 0 : x).join(',') + '}';
       else callArgs += valToLit(tcs[i].input[j], inTypes[j]);
     }
-    s += '    auto __r = ' + fn + '(' + callArgs + ');\n';
-    s += '    cout << "{\\"index\\":' + i + ',\\"ran\\":true,\\"passed\\":";\n';
-    let compExpr = '';
-    if (outType === 'int[]') {
-      compExpr = '(__r == vector<int>{' + tcs[i].expected.map(x => x).join(',') + '} ? "true" : "false")';
-    } else if (outType === 'int') {
-      compExpr = '(__r == ' + valToLit(tcs[i].expected, outType) + ' ? "true" : "false")';
-    } else if (outType === 'string') {
-      compExpr = '(__r == ' + valToLit(tcs[i].expected, outType) + ' ? "true" : "false")';
-    } else if (outType === 'bool') {
-      compExpr = '(__r == ' + valToLit(tcs[i].expected, outType) + ' ? "true" : "false")';
+    if (isClass) {
+      s += '    ' + fn + ' __r(' + callArgs + ');\n';
+      s += '    cout << "{\\"index\\":' + i + ',\\"ran\\":true,\\"passed\\":true,\\"actual\\":\\"instance\\"}" << flush;\n';
     } else {
-      compExpr = '"false"';
+      s += '    auto __r = ' + fn + '(' + callArgs + ');\n';
+      s += '    cout << "{\\"index\\":' + i + ',\\"ran\\":true,\\"passed\\":";\n';
+      let compExpr = '';
+      if (outType === 'int[]') {
+        compExpr = '(__r == vector<int>{' + tcs[i].expected.map(x => x === null || x === undefined ? 0 : x).join(',') + '} ? "true" : "false")';
+      } else if (outType === 'int') {
+        compExpr = '(__r == ' + valToLit(tcs[i].expected, outType) + ' ? "true" : "false")';
+      } else if (outType === 'string') {
+        compExpr = '(__r == ' + valToLit(tcs[i].expected, outType) + ' ? "true" : "false")';
+      } else if (outType === 'bool') {
+        compExpr = '(__r == ' + valToLit(tcs[i].expected, outType) + ' ? "true" : "false")';
+      } else {
+        compExpr = '"false"';
+      }
+      s += '    cout << ' + compExpr + ';\n';
+      s += '    cout << ",\\"actual\\":" << __j(__r);\n';
+      s += '    cout << "}" << flush;\n';
     }
-    s += '    cout << ' + compExpr + ';\n';
-    s += '    cout << ",\\"actual\\":" << __j(__r);\n';
-    s += '    cout << "}" << flush;\n';
     s += '  } catch (...) {\n';
     s += '    cout << "{\\"index\\":' + i + ',\\"ran\\":true,\\"passed\\":false,\\"error\\":\\"exception\\"}" << flush;\n';
     s += '  }\n';
@@ -2446,18 +2489,22 @@ function genCppHarness(code, fn, tcs) {
   return s;
 }
 
-function genJavaHarness(code, fn, tcs) {
+function genJavaHarness(code, fn, tcs, isClass) {
   const outType = j2t(tcs[0].expected);
   const inTypes = tcs[0].input.map(v => j2t(v));
   const javaType = outType === 'int[]' ? 'int[]' : outType === 'string' ? 'String' : outType === 'bool' ? 'boolean' : 'int';
   let s = code + '\n\nclass Main {\n';
-  if (outType === 'int[]') {
-    s += '  static String __j(int[] v) {\n    if (v == null) return "null";\n    StringBuilder sb = new StringBuilder("[");\n    for (int i = 0; i < v.length; i++) { if (i > 0) sb.append(","); sb.append(v[i]); }\n    sb.append("]");\n    return sb.toString();\n  }\n';
-    s += '  static boolean __eq(int[] a, int[] b) {\n    if (a == null && b == null) return true;\n    if (a == null || b == null || a.length != b.length) return false;\n    for (int i = 0; i < a.length; i++) if (a[i] != b[i]) return false;\n    return true;\n  }\n';
+  if (isClass) {
+    s += '  static String __j(Object v) { return v == null ? "null" : "\\"instance\\""; }\n';
   } else {
-    s += '  static String __j(boolean v) { return String.valueOf(v); }\n';
-    s += '  static String __j(int v) { return String.valueOf(v); }\n';
-    s += '  static String __j(String v) { return v == null ? "null" : "\\"" + v + "\\""; }\n';
+    if (outType === 'int[]') {
+      s += '  static String __j(int[] v) {\n    if (v == null) return "null";\n    StringBuilder sb = new StringBuilder("[");\n    for (int i = 0; i < v.length; i++) { if (i > 0) sb.append(","); sb.append(v[i]); }\n    sb.append("]");\n    return sb.toString();\n  }\n';
+      s += '  static boolean __eq(int[] a, int[] b) {\n    if (a == null && b == null) return true;\n    if (a == null || b == null || a.length != b.length) return false;\n    for (int i = 0; i < a.length; i++) if (a[i] != b[i]) return false;\n    return true;\n  }\n';
+    } else {
+      s += '  static String __j(boolean v) { return String.valueOf(v); }\n';
+      s += '  static String __j(int v) { return String.valueOf(v); }\n';
+      s += '  static String __j(String v) { return v == null ? "null" : "\\"" + v + "\\""; }\n';
+    }
   }
   s += '  public static void main(String[] args) {\n    StringBuilder __res = new StringBuilder("[");\n';
   for (let i = 0; i < tcs.length; i++) {
@@ -2466,16 +2513,21 @@ function genJavaHarness(code, fn, tcs) {
     let callArgs = '';
     for (let j = 0; j < inTypes.length; j++) {
       if (j > 0) callArgs += ', ';
-      if (inTypes[j] === 'int[]') callArgs += 'new int[]{' + tcs[i].input[j].map(x => x).join(',') + '}';
+      if (inTypes[j] === 'int[]') callArgs += 'new int[]{' + tcs[i].input[j].map(x => x === null || x === undefined ? 0 : x).join(',') + '}';
       else callArgs += valToLit(tcs[i].input[j], inTypes[j]);
     }
-    s += '      ' + javaType + ' __r = new Solution().' + fn + '(' + callArgs + ');\n';
-    if (outType === 'int[]') {
-      s += '      boolean __p = __eq(__r, new int[]{' + tcs[i].expected.map(x => x).join(',') + '});\n';
+    if (isClass) {
+      s += '      ' + fn + ' __r = new ' + fn + '(' + callArgs + ');\n';
+      s += '      __res.append("{\\"index\\":' + i + ',\\"ran\\":true,\\"passed\\":true,\\"actual\\":" + __j(__r) + "}");\n';
     } else {
-      s += '      boolean __p = __r == ' + valToLit(tcs[i].expected, outType) + ';\n';
+      s += '      ' + javaType + ' __r = new Solution().' + fn + '(' + callArgs + ');\n';
+      if (outType === 'int[]') {
+        s += '      boolean __p = __eq(__r, new int[]{' + tcs[i].expected.map(x => x === null || x === undefined ? 0 : x).join(',') + '});\n';
+      } else {
+        s += '      boolean __p = __r == ' + valToLit(tcs[i].expected, outType) + ';\n';
+      }
+      s += '      __res.append("{\\"index\\":' + i + ',\\"ran\\":true,\\"passed\\":" + __p + ",\\"actual\\":" + __j(__r) + "}");\n';
     }
-    s += '      __res.append("{\\"index\\":' + i + ',\\"ran\\":true,\\"passed\\":" + __p + ",\\"actual\\":" + __j(__r) + "}");\n';
     s += '    } catch (Exception e) {\n';
     s += '      __res.append("{\\"index\\":' + i + ',\\"ran\\":true,\\"passed\\":false,\\"error\\":\\"" + (e.getMessage() != null ? e.getMessage().replace("\\"","\'") : "null") + "\\"}");\n';
     s += '    }\n';
@@ -2484,7 +2536,7 @@ function genJavaHarness(code, fn, tcs) {
   return s;
 }
 
-function genCHarness(code, fn, tcs) {
+function genCHarness(code, fn, tcs, isClass) {
   const outType = j2t(tcs[0].expected);
   const inTypes = tcs[0].input.map(v => j2t(v));
   let s = '#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <stdbool.h>\n\n';
@@ -2497,22 +2549,26 @@ function genCHarness(code, fn, tcs) {
   for (let i = 0; i < tcs.length; i++) {
     if (i > 0) s += '  printf(",");\n';
     s += '  {\n';
-    s += '  printf("{\\"index\\":' + i + ',\\"ran\\":true,\\"passed\\":");\n';
     let callArgs = '';
     for (let j = 0; j < inTypes.length; j++) {
       if (j > 0) callArgs += ', ';
       if (inTypes[j] === 'int[]') {
         const arr = tcs[i].input[j];
-        callArgs += '(int[]){' + arr.map(x => x).join(',') + '}, ' + arr.length;
+        callArgs += '(int[]){' + arr.map(x => x === null || x === undefined ? 0 : x).join(',') + '}, ' + arr.length;
       } else callArgs += valToLit(tcs[i].input[j], inTypes[j]);
     }
-    if (outType === 'int[]') {
+    if (isClass) {
+      s += '  printf("{\\"index\\":' + i + ',\\"ran\\":true,\\"passed\\":true,\\"actual\\":\\"instance\\"}");\n';
+    } else if (outType === 'int[]') {
       const expLen = Array.isArray(tcs[i].expected) ? tcs[i].expected.length : 1;
+      s += '  printf("{\\"index\\":' + i + ',\\"ran\\":true,\\"passed\\":");\n';
       s += '  int* __r = ' + fn + '(' + callArgs + ');\n';
-      s += '  int __p = __eq(__r, (int[]){' + tcs[i].expected.map(x => x).join(',') + '}, ' + expLen + ');\n';
+      s += '  int __p = __eq(__r, (int[]){' + tcs[i].expected.map(x => x === null || x === undefined ? 0 : x).join(',') + '}, ' + expLen + ');\n';
       s += '  printf(__p ? "true" : "false");\n  printf(",\\"actual\\":");\n  char __buf[256]; __j(__r, ' + expLen + ', __buf); printf("%s", __buf);\n';
+      s += '  printf("}");\n';
     } else {
       const cType = outType === 'string' ? 'char*' : 'int';
+      s += '  printf("{\\"index\\":' + i + ',\\"ran\\":true,\\"passed\\":");\n';
       s += '  ' + cType + ' __r = ' + fn + '(' + callArgs + ');\n';
       if (outType === 'string') {
         const expStr = valToLit(tcs[i].expected, outType);
@@ -2524,18 +2580,21 @@ function genCHarness(code, fn, tcs) {
       if (outType === 'string') s += '  printf(__r ? "\\"%s\\"" : "null", __r);\n';
       else if (outType === 'bool') s += '  printf(__r ? "true" : "false");\n';
       else s += '  printf("%d", __r);\n';
+      s += '  printf("}");\n';
     }
-    s += '  printf("}");\n  }\n';
+    s += '  }\n';
   }
   s += '  printf("]\\n");\n  return 0;\n}\n';
   return s;
 }
 
-function genSwiftHarness(code, fn, tcs) {
+function genSwiftHarness(code, fn, tcs, isClass) {
   const outType = j2t(tcs[0].expected);
   let s = 'import Foundation\n\n';
   s += code + '\n\n';
-  if (outType === 'int[]') {
+  if (isClass) {
+    s += 'func __j(_ v: Any) -> String { return "\\"instance\\"" }\n';
+  } else if (outType === 'int[]') {
     s += 'func __j(_ v: [Int]) -> String {\n  if v.isEmpty { return "[]" }\n  return "[" + v.map(String.init).joined(separator: ",") + "]"\n}\n';
   } else if (outType === 'int') {
     s += 'func __j(_ v: Int) -> String { return String(v) }\n';
@@ -2552,16 +2611,21 @@ function genSwiftHarness(code, fn, tcs) {
     const inTypes = tcs[i].input.map(v => j2t(v));
     for (let j = 0; j < inTypes.length; j++) {
       if (j > 0) callArgs += ', ';
-      if (inTypes[j] === 'int[]') callArgs += '[' + tcs[i].input[j].map(x => x).join(',') + '] as [Int]';
+      if (inTypes[j] === 'int[]') callArgs += '[' + tcs[i].input[j].map(x => x === null || x === undefined ? 0 : x).join(',') + '] as [Int]';
       else callArgs += valToLit(tcs[i].input[j], inTypes[j]);
     }
-    s += '  let __r = ' + fn + '(' + callArgs + ')\n';
-    if (outType === 'int[]') {
-      s += '  let __p = __r == [' + tcs[i].expected.map(x => x).join(',') + ']\n';
+    if (isClass) {
+      s += '  let __r = ' + fn + '(' + callArgs + ')\n';
+      s += '  __res += "{\\"index\\":' + i + ',\\"ran\\":true,\\"passed\\":true,\\"actual\\":" + __j(__r) + "}"\n';
     } else {
-      s += '  let __p = __r == ' + valToLit(tcs[i].expected, outType) + '\n';
+      s += '  let __r = ' + fn + '(' + callArgs + ')\n';
+      if (outType === 'int[]') {
+        s += '  let __p = __r == [' + tcs[i].expected.map(x => x === null || x === undefined ? 0 : x).join(',') + ']\n';
+      } else {
+        s += '  let __p = __r == ' + valToLit(tcs[i].expected, outType) + '\n';
+      }
+      s += '  __res += "{\\"index\\":' + i + ',\\"ran\\":true,\\"passed\\":" + (__p ? "true" : "false") + ",\\"actual\\":" + __j(__r) + "}"\n';
     }
-    s += '  __res += "{\\"index\\":' + i + ',\\"ran\\":true,\\"passed\\":" + (__p ? "true" : "false") + ",\\"actual\\":" + __j(__r) + "}"\n';
     s += '} catch {\n';
     s += '  __res += "{\\"index\\":' + i + ',\\"ran\\":true,\\"passed\\":false,\\"error\\":\\"exception\\"}"\n';
     s += '}\n';
@@ -2630,7 +2694,7 @@ async function executeCode(code, lang, problem) {
     return { allPassed: false, testResults: [], rawOutput: "This problem has no automated test cases." };
   }
   const fnName = problem.functionName || "solution";
-  const harnessCode = buildHarnessCode(code, lang, fnName, testCases);
+  const harnessCode = buildHarnessCode(code, lang, fnName, testCases, problem);
   let stdout = "", stderr = "";
   if (lang === "javascript") {
     try {
