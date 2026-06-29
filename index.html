@@ -1283,7 +1283,7 @@
             <span class="quiz-topic-badge" id="quizTopicBadge"></span>
             <span class="quiz-difficulty" id="quizDifficulty"></span>
             <h3 id="quizTitle">Problem Title</h3>
-            <button type="button" class="quiz-modal-close" id="quizModalClose" aria-label="Close" onclick="closeQuizEditor()">&times;</button>
+            <button type="button" class="quiz-modal-close" id="quizModalClose" aria-label="Close">&times;</button>
           </div>
         </div>
         <div class="quiz-modal-body">
@@ -1375,10 +1375,10 @@
         </div>
         <div class="quiz-modal-footer">
           <div class="quiz-actions">
-            <button class="btn btn-outline" onclick="runQuizCode()">
+            <button class="btn btn-outline" id="quizRunBtn">
               <i class="fas fa-play"></i> Run
             </button>
-            <button class="btn btn-primary" onclick="submitQuizCode()">
+            <button class="btn btn-primary" id="quizSubmitBtn">
               <i class="fas fa-paper-plane"></i> Submit
             </button>
           </div>

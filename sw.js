@@ -79,10 +79,10 @@ self.addEventListener('fetch', (event) => {
             return networkResponse;
           });
         }).catch(() => {
-          // If offline and not in cache, return the custom offline page for navigation requests
           if (event.request.mode === 'navigate') {
             return caches.match('/offline.html');
           }
+          return new Response('', { status: 503, statusText: 'Service Unavailable' });
         });
 
         return cachedResponse || fetchPromise;

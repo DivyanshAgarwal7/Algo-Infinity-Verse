@@ -164,6 +164,8 @@ function getPartialsBase() {
   return 'partials';
 }
 
+const PARTIALS_VERSION = 1;
+
 async function loadPartial(id, url) {
   const abortKey = `partial_${id}`;
   try {
@@ -171,9 +173,9 @@ async function loadPartial(id, url) {
     const base = getPartialsBase();
     const filename = url.replace(/^\/?partials\//, '');
     const fetchUrl = base + '/' + filename;
+    const versionedUrl = fetchUrl + '?v=' + PARTIALS_VERSION;
     
-    // Cache partials for 24 hours (86400000 ms) as they rarely change
-    const html = await apiCache.fetchWithCache(fetchUrl, { signal }, 86400000, 'text');
+    const html = await apiCache.fetchWithCache(versionedUrl, { signal }, 86400000, 'text');
     
     document.getElementById(id).innerHTML = html;
     handleActiveNav();
@@ -2453,6 +2455,15 @@ function openQuizEditor(problem) {
   modal.classList.add("active");
   updateLineNumbers();
   syncScroll();
+
+  if (!modal._quizCloseBound) {
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal || e.target.closest('.quiz-modal-close')) {
+        closeQuizEditor();
+      }
+    });
+    modal._quizCloseBound = true;
+  }
 }
 
 function mapType(jt, lang) {
@@ -2910,16 +2921,17 @@ function runWorker(harnessCode, timeoutMs) {
 }
 
 const API_BASE = (location.hostname === 'localhost' || location.hostname === '127.0.0.1')
-  ? 'http://localhost:3001'
+  ? window.location.origin
   : '';
 
-async function executeViaApi(lang, code) {
+async function executeViaApi(lang, code, originalCode) {
   // Make sure this points to your new secure Node.js route
   const response = await fetch(`${API_BASE}/api/execute`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ 
       sourceCode: code, 
+      originalCode: originalCode,
       language: lang, 
       stdin: "" 
     })
@@ -2971,23 +2983,35 @@ async function executeCode(code, lang, problem) {
   
   let stdout = "", stderr = "", memory = "", cpuTime = "";
   
-  // We now route ALL languages (including JS) through our real API for consistency and real limits
   try {
-    const result = await executeViaApi(lang, harnessCode);
+    const result = await executeViaApi(lang, harnessCode, code);
     stdout = result.stdout;
     memory = result.memory;
     cpuTime = result.cpuTime;
   } catch (e) {
-    return { 
-      allPassed: false, 
-      testResults: testCases.map(() => ({ ran: false, passed: false, error: e.message })), 
-      rawOutput: e.message 
-    };
+    if (lang === "javascript" && isAiInterviewerActive) {
+      try {
+        const { executeSandboxedCode } = await import('./modules/code-executor.js');
+        const logs = await executeSandboxedCode(harnessCode, 5000);
+        stdout = logs.join("\n");
+      } catch (sandboxErr) {
+        return { 
+          allPassed: false, 
+          testResults: testCases.map(() => ({ ran: false, passed: false, error: sandboxErr.message })), 
+          rawOutput: sandboxErr.message 
+        };
+      }
+    } else {
+      return { 
+        allPassed: false, 
+        testResults: testCases.map(() => ({ ran: false, passed: false, error: e.message })), 
+        rawOutput: e.message 
+      };
+    }
   }
   
   const parsedResults = parseTestResults(stdout, testCases.length);
   
-  // Attach performance metrics to the result object
   parsedResults.metrics = {
     memory: memory || "N/A",
     cpuTime: cpuTime || "N/A"
@@ -3593,6 +3617,10 @@ function initializeQuizEditor() {
     else if (e.ctrlKey && e.key === 'Enter') { e.preventDefault(); runQuizCode(); }
     else if (e.ctrlKey && e.key === 's') { e.preventDefault(); submitQuizCode(); }
   });
+  const runBtn = document.getElementById('quizRunBtn');
+  const submitBtn = document.getElementById('quizSubmitBtn');
+  if (runBtn) runBtn.addEventListener('click', runQuizCode);
+  if (submitBtn) submitBtn.addEventListener('click', submitQuizCode);
   if (languageSelect) languageSelect.addEventListener('change', () => { const editor = document.getElementById('codeEditor'); if (editor && currentProblem) { editor.value = getDefaultCode(languageSelect.value, currentProblem); editor.scrollTop = 0; editor.scrollLeft = 0; } syncEditorState(); updateEditorDisplayMode(); });
   syncEditorState();
   initEditorZoom(editor);
