@@ -58,7 +58,8 @@ import {
   repoAnalysisLimiter,
   sdlcAdvisorLimiter,
   predictionLimiter,
-  bulkAuditLimiter
+  bulkAuditLimiter,
+  logErrorLimiter
 } from "./backend/utils/rateLimiter.js";
 import { applySM2 } from "./backend/services/memory.service.js";
 import { sendVerificationEmail } from "./backend/services/email.service.js";
@@ -107,6 +108,15 @@ const MEMORY_FILE = path.join(DATA_DIR, "memory.json");
 const TEAM_PROFILES_FILE = path.join(DATA_DIR, "team_profiles.json");
 const AUDITS_FILE = path.join(DATA_DIR, "audits_history.json");
 const EXECUTIONS_FILE = path.join(DATA_DIR, "executions.json");
+const CLIENT_ERRORS_FILE = path.join(DATA_DIR, "client_errors.json");
+const FEEDBACK_FILE = path.join(DATA_DIR, "feedback.json");
+const INTERVIEW_EXPERIENCES_FILE = path.join(DATA_DIR, "interview-experiences.json");
+
+// Caps for append-only JSON logs so they can never grow unbounded on disk.
+const MAX_CLIENT_ERROR_ENTRIES = 1000;
+const MAX_FEEDBACK_ENTRIES = 5000;
+const MAX_INTERVIEW_EXPERIENCE_ENTRIES = 5000;
+const MAX_AUDIT_HISTORY_ENTRIES = 1000;
 const SESSION_COOKIE = "aiv_session";
 const ACCESS_COOKIE = "aiv_access";
 const REFRESH_COOKIE = "aiv_refresh";
@@ -415,6 +425,43 @@ async function updateTeamProfilesStore(mutator) {
   return task;
 }
 
+// ── Serialized, size-capped JSON array append store ──────────────────────────
+// Append-style endpoints (client error logs, feedback, interview experiences,
+// audit history) previously did an unserialized readFile → parse → push →
+// writeFile. Under concurrency those interleave and silently drop entries
+// (lost writes), and they grow without bound — the anonymous /api/log-error
+// route is a disk-fill DoS. This helper serializes each file's read-modify-write
+// through a per-file promise chain (mirroring updateMemoryStore), writes
+// atomically via a temp file + rename, and caps the array to its most recent
+// `maxEntries` so the file can never grow unbounded.
+const jsonArrayWriteQueues = new Map();
+
+function appendToJsonArrayFile(filePath, entry, maxEntries = 1000) {
+  const previous = jsonArrayWriteQueues.get(filePath) || Promise.resolve();
+  const task = previous.then(async () => {
+    await fs.mkdir(DATA_DIR, { recursive: true });
+    let list = [];
+    try {
+      const raw = await fs.readFile(filePath, "utf8");
+      list = JSON.parse(raw || "[]");
+      if (!Array.isArray(list)) list = [];
+    } catch (err) {
+      if (err.code !== "ENOENT") throw err;
+    }
+    list.push(entry);
+    if (list.length > maxEntries) {
+      list = list.slice(list.length - maxEntries);
+    }
+    const tmpPath = `${filePath}.${process.pid}.${Date.now()}.tmp`;
+    await fs.writeFile(tmpPath, `${JSON.stringify(list, null, 2)}\n`);
+    await fs.rename(tmpPath, filePath);
+    return entry;
+  });
+  // Keep the chain alive even if one write rejects, so later writes still run.
+  jsonArrayWriteQueues.set(filePath, task.catch(() => {}));
+  return task;
+}
+
 // ──────────────────────────────────────────────────────────────────────────
 
 async function readJsonBody(req) {
@@ -552,19 +599,14 @@ async function handleApi(req, res, pathname) {
   }
 
   if (pathname === "/api/log-error" && req.method === "POST") {
+    // Anonymous + append-only: rate-limit to curb write-flooding abuse. The
+    // capped, serialized write below bounds disk use regardless.
+    if (!applyRateLimit(req, res, logErrorLimiter, "Too many error reports. Please try again later.")) {
+      return;
+    }
     try {
       const payload = await readJsonBody(req);
-      const logFile = path.join(DATA_DIR, "client_errors.json");
-      await fs.mkdir(DATA_DIR, { recursive: true });
-      let currentLogs = [];
-      try {
-        const raw = await fs.readFile(logFile, "utf8");
-        currentLogs = JSON.parse(raw || "[]");
-      } catch (e) {
-        // file might not exist
-      }
-      currentLogs.push(payload);
-      await fs.writeFile(logFile, `${JSON.stringify(currentLogs, null, 2)}\n`);
+      await appendToJsonArrayFile(CLIENT_ERRORS_FILE, payload, MAX_CLIENT_ERROR_ENTRIES);
       return sendJson(res, 200, { success: true });
     } catch (err) {
       console.error("Error logging client error:", err);
@@ -1829,21 +1871,8 @@ if (pathname === "/api/forgot-password" && req.method === "POST") {
         const docRef = await db.collection("feedback").add(feedbackData);
         feedbackData.id = docRef.id;
       } else {
-        const feedbackFile = path.join(DATA_DIR, "feedback.json");
-        await fs.mkdir(DATA_DIR, { recursive: true });
-        let feedbackList = [];
-        try {
-          const raw = await fs.readFile(feedbackFile, "utf8");
-          feedbackList = JSON.parse(raw || "[]");
-        } catch (err) {
-          if (err.code !== "ENOENT") throw err;
-        }
         feedbackData.id = crypto.randomUUID();
-        feedbackList.push(feedbackData);
-        await fs.writeFile(
-          feedbackFile,
-          JSON.stringify(feedbackList, null, 2) + "\n",
-        );
+        await appendToJsonArrayFile(FEEDBACK_FILE, feedbackData, MAX_FEEDBACK_ENTRIES);
       }
 
       return sendJson(res, 201, { success: true, feedback: feedbackData });
@@ -1944,17 +1973,11 @@ if (pathname === "/api/forgot-password" && req.method === "POST") {
           .add(experienceData);
         experienceData.id = docRef.id;
       } else {
-        const filePath = path.join(DATA_DIR, "interview-experiences.json");
-        await fs.mkdir(DATA_DIR, { recursive: true });
-        let list = [];
-        try {
-          const raw = await fs.readFile(filePath, "utf8");
-          list = JSON.parse(raw || "[]");
-        } catch (err) {
-          if (err.code !== "ENOENT") throw err;
-        }
-        list.push(experienceData);
-        await fs.writeFile(filePath, JSON.stringify(list, null, 2) + "\n");
+        await appendToJsonArrayFile(
+          INTERVIEW_EXPERIENCES_FILE,
+          experienceData,
+          MAX_INTERVIEW_EXPERIENCE_ENTRIES,
+        );
       }
       return sendJson(res, 201, { success: true, experience: experienceData });
     } catch (err) {
@@ -1985,9 +2008,7 @@ if (pathname === "/api/forgot-password" && req.method === "POST") {
       if (useFirestore) {
         await db.collection(COLLECTIONS.AUDITS_HISTORY).doc(auditData.auditId).set(auditData);
       } else {
-        const audits = await readAudits();
-        audits.push(auditData);
-        await writeAudits(audits);
+        await appendToJsonArrayFile(AUDITS_FILE, auditData, MAX_AUDIT_HISTORY_ENTRIES);
       }
 
       return sendJson(res, 201, { success: true, auditId: auditData.auditId });
@@ -3456,7 +3477,7 @@ socket.on('voice-ice', ({ roomId, candidate, to, from }) => {
 });
 // -----------------------------------------
 
-export { server, hashPassword, passwordMatches, applySM2, validateSignup, updateMemoryStore, readMemoryStore };
+export { server, hashPassword, passwordMatches, applySM2, validateSignup, updateMemoryStore, readMemoryStore, appendToJsonArrayFile };
 if (process.env.VERCEL === "1") {
   db = initializeFirebase();
   useFirestore = !!db;
