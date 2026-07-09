@@ -138,14 +138,70 @@
     return { map, chars };
   }
 
+  function compareKeyTuple(keys, aIdx, bIdx) {
+    const ka = keys[aIdx];
+    const kb = keys[bIdx];
+
+    if (ka[0] !== kb[0]) return ka[0] - kb[0];
+    if (ka[1] !== kb[1]) return ka[1] - kb[1];
+
+    // Deterministic tie-breaker to match previous behavior.
+    return aIdx - bIdx;
+  }
+
+  function stableInsertionSortSim(keys, indices) {
+    // Produces frames: compare + shift + place.
+    // - indices is treated as the input order (stable base).
+    // - we output ordering in ascending key order.
+    const arr = indices.slice();
+    const frames = [];
+
+    // Insertion sort on arr.
+    for (let i = 1; i < arr.length; i++) {
+      const item = arr[i];
+      let j = i - 1;
+
+      // Compare item against elements to its left.
+      while (j >= 0) {
+        frames.push({
+          type: 'Compare',
+          left: arr[j],
+          right: item,
+          comparedKeys: [keys[arr[j]], keys[item]],
+        });
+
+        // If left <= item, we can stop (stable insertion point).
+        const cmp = compareKeyTuple(keys, arr[j], item);
+        if (cmp <= 0) break;
+
+        // Shift arr[j] one step right.
+        frames.push({
+          type: 'Shift',
+          fromPos: j,
+          toPos: j + 1,
+          movedIndex: arr[j],
+        });
+
+        arr[j + 1] = arr[j];
+        j--;
+      }
+
+      // Place item at j+1
+      const placePos = j + 1;
+      frames.push({
+        type: 'Place',
+        pos: placePos,
+        placedIndex: item,
+      });
+      arr[placePos] = item;
+    }
+
+    return { sorted: arr, frames };
+  }
+
   function buildDoublingSteps(s) {
     const n = s.length;
-    if (n === 0) {
-      return {
-        steps: [],
-        finalOrder: [],
-      };
-    }
+    if (n === 0) return { steps: [], finalOrder: [] };
     if (n === 1) {
       return {
         steps: [
@@ -168,25 +224,41 @@
     const { map, chars } = getCharCodeMap(s);
     let ranks = chars.map((ch) => map.get(ch));
 
-    // initial ordering by single-character rank
-    let ordering = Array.from({ length: n }, (_, i) => i).sort((a, b) => {
-      if (ranks[a] !== ranks[b]) return ranks[a] - ranks[b];
-      return a - b;
-    });
-
     const steps = [];
 
-    // Round 0 / Initialization
+    // Use stable insertion sort for initial ordering too (so we show compare/place).
     {
-      const keys = ordering.map((i) => [ranks[i], -1]);
+      const len = 1;
+      const k = 0;
+      const keys = Array.from({ length: n }, (_, i) => [ranks[i], -1]);
+      const inputIndices = Array.from({ length: n }, (_, i) => i);
+      const { sorted: ordering, frames } = stableInsertionSortSim(keys, inputIndices);
+
+      // Initialization frames
+      frames.forEach((f) => {
+        steps.push({
+          phase: 'Initialization (stable insert)',
+          k,
+          len,
+          ordering: ordering.slice(), // show final ordering snapshot for context
+          ranks: ranks.slice(),
+          nextRanks: ranks.slice(),
+          keys: ordering.map((idx) => keys[idx]),
+          updated: ordering.map(() => false),
+          explanation: buildComparePlaceExplanation(k, len, f, keys, s, ordering),
+          anim: f,
+        });
+      });
+
+      // Final initialization snapshot (rank table values)
       steps.push({
         phase: 'Initialization',
-        k: 0,
-        len: 1,
+        k,
+        len,
         ordering: ordering.slice(),
         ranks: ranks.slice(),
         nextRanks: ranks.slice(),
-        keys,
+        keys: ordering.map((idx) => keys[idx]),
         updated: ordering.map(() => false),
         explanation:
           'Assign initial ranks based on characters. Ordering is sorted by first-character rank.',
@@ -203,13 +275,8 @@
         return [r1, r2];
       });
 
-      ordering = Array.from({ length: n }, (_, i) => i).sort((a, b) => {
-        const ka = keys[a];
-        const kb = keys[b];
-        if (ka[0] !== kb[0]) return ka[0] - kb[0];
-        if (ka[1] !== kb[1]) return ka[1] - kb[1];
-        return a - b;
-      });
+      const inputIndices = Array.from({ length: n }, (_, i) => i);
+      const { sorted: ordering, frames } = stableInsertionSortSim(keys, inputIndices);
 
       // compute new ranks after sorting by keys
       const nextRanks = new Array(n).fill(0);
@@ -224,9 +291,25 @@
         nextRanks[curr] = curRank;
       }
 
-      // determine updated rows (educational)
       const updated = ordering.map((i) => nextRanks[i] !== ranks[i]);
 
+      // Add frames for this round
+      frames.forEach((f) => {
+        steps.push({
+          phase: `Round (doubling, k=${k})` + (f.type === 'Compare' ? '' : ''),
+          k,
+          len,
+          ordering: ordering.slice(),
+          ranks: ranks.slice(),
+          nextRanks: nextRanks.slice(),
+          keys: ordering.map((idx) => keys[idx]),
+          updated,
+          anim: f,
+          explanation: buildComparePlaceExplanation(k, len, f, keys, s, ordering),
+        });
+      });
+
+      // Round end snapshot (ranks update)
       steps.push({
         phase: 'Round (doubling)',
         k,
@@ -234,15 +317,14 @@
         ordering: ordering.slice(),
         ranks: ranks.slice(),
         nextRanks: nextRanks.slice(),
-        keys: ordering.map((i) => keys[i]),
+        keys: ordering.map((idx) => keys[idx]),
         updated,
         explanation:
-          `Sorted suffixes by key (rank[i], rank[i+${len}]) and reassigned ranks (new rank ids are compressed from sorted unique keys).`,
+          `Finished stable sorting by key (rank[i], rank[i+${len}]); then reassigned ranks (compressed from sorted unique keys).`,
       });
 
       ranks = nextRanks;
 
-      // stop if all ranks are unique
       const maxRank = Math.max(...ranks);
       if (maxRank === n - 1) break;
 
@@ -251,7 +333,7 @@
       if (len > n) break;
     }
 
-    // final ordering: rank-based sort
+    // final ordering: rank-based sort (keep deterministic)
     const finalOrdering = Array.from({ length: n }, (_, i) => i).sort((a, b) => {
       if (ranks[a] !== ranks[b]) return ranks[a] - ranks[b];
       return a - b;
@@ -260,6 +342,42 @@
     return { steps, finalOrder: finalOrdering };
   }
 
+  function buildComparePlaceExplanation(k, len, frame, keys, s, ordering) {
+    if (!frame || !frame.type) return '';
+
+    if (frame.type === 'Compare') {
+      const leftKey = frame.comparedKeys[0];
+      const rightKey = frame.comparedKeys[1];
+      const leftIdx = frame.left;
+      const rightIdx = frame.right;
+      return `Compared keys: ${formatKey(leftKey)} for suffix ${leftIdx} (${formatSuffixPreview(s, leftIdx)}) vs ${formatKey(rightKey)} for suffix ${rightIdx} (${formatSuffixPreview(s, rightIdx)}).`;
+    }
+
+    if (frame.type === 'Shift') {
+      return `Shift: moving suffix index ${frame.movedIndex} one position to the right.`;
+    }
+
+    if (frame.type === 'Place') {
+      return `Place: inserting suffix index ${frame.placedIndex} at position ${frame.pos}.`;
+    }
+
+    if (frame.type === 'RoundEnd') return 'Round finished.';
+
+    return String(frame.type);
+  }
+
+  function formatKey(keyTuple) {
+    if (!keyTuple) return '(—, —)';
+    const a = keyTuple[0] ?? '-';
+    const b = keyTuple[1] ?? '-';
+    return `(${a}, ${b})`;
+  }
+
+  function formatSuffixPreview(s, idx) {
+    return substringForSuffix(s, idx);
+  }
+
+  // Keep original helper used by drill-down.
   function substringForSuffix(s, i, maxLen = 18) {
     const sub = s.slice(i);
     if (sub.length <= maxLen) return sub;
@@ -452,11 +570,23 @@
 
       tr.append(suffixCell, rankCell, keyCell, nextRankCell);
 
+      tr.setAttribute('tabindex', '0');
+
       tr.addEventListener('click', () => {
         state.selectedRowIdx = rowIdx;
         state.activeSuffixRow = rowIdx;
         updateDrillDownPanel();
         renderRound();
+      });
+
+      tr.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          state.selectedRowIdx = rowIdx;
+          state.activeSuffixRow = rowIdx;
+          updateDrillDownPanel();
+          renderRound();
+        }
       });
 
       el.tableBody.appendChild(tr);
