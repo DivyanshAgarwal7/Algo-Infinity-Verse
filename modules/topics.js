@@ -167,5 +167,7 @@ export {
     getTopicProgress, 
     getUserProgress,
     saveUserProgress,
-    getCompletedTopics
+    getCompletedTopics,
+    initTopicOfTheDay,
+    initTopicsSection
 };
