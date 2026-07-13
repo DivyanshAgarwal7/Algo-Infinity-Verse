@@ -43,10 +43,19 @@ function publicUser(user) {
   };
 }
 
+let cachedUsers = null;
+let cacheTime = 0;
+const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
+
 async function readUsers() {
+  if (cachedUsers && Date.now() - cacheTime < CACHE_TTL) {
+    return cachedUsers;
+  }
   if (!useFirestore) return [];
-  const snapshot = await db.collection('users').orderBy('xp', 'desc').limit(100).get();
-  return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+  const snapshot = await db.collection('users').get();
+  cachedUsers = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+  cacheTime = Date.now();
+  return cachedUsers;
 }
 
 export default async function handler(req, res) {
