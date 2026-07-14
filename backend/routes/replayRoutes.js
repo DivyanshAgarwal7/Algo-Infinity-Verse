@@ -3,23 +3,13 @@ const express = require('express');
 const router = express.Router();
 const thinkingReplayController = require('../controllers/thinkingReplayController');
 
-// 🆕 Get replay for a problem - Now using controller
+// ✅ Replay route - Already moved in #2281
 router.get('/replay/:problemId', thinkingReplayController.getReplay);
 
-// Save snapshot (still inline - can be extracted later)
-router.post('/snapshot', async (req, res) => {
-  try {
-    const { problemId, code, status, executionTime, errors } = req.body;
-    const userId = req.user?.id || 'anonymous';
-    // Save snapshot to database
-    console.log('Saving snapshot:', { userId, problemId, code, status, executionTime, errors });
-    res.json({ success: true, message: 'Snapshot saved' });
-  } catch (error) {
-    res.status(500).json({ error: 'Failed to save snapshot' });
-  }
-});
+// 🔥 UPDATED: Snapshot route - Moved to controller in #2282
+router.post('/snapshot', thinkingReplayController.saveSnapshot);
 
-// Log editor event (still inline)
+// ⚠️ UNCHANGED: Event route remains inline (For future issues)
 router.post('/event', async (req, res) => {
   try {
     const { problemId, type } = req.body;
