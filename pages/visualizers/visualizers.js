@@ -1021,6 +1021,11 @@ const visualizers = [
     desc: 'Spectre side-channel attack — speculative execution visualized.',
   },
   {
+    name: 'Consistent Hashing Visualizer',
+    path: '/pages/visualizers/consistent-hashing-simulator/consistent-hashing-simulator.html',
+    category: 'Systems & OS',
+    icon: 'fa-server',
+    desc: 'Interactive hash ring showing node distribution and key routing.',
     name: 'gRPC & HTTP/2 Multiplexing Visualizer',
     path: '/pages/visualizers/grpc-simulator/grpc-simulator.html',
     category: 'Architecture',
