@@ -1070,6 +1070,11 @@ const visualizers = [
     desc: 'Visualize Peer-to-Peer connections, STUN hole-punching, and TURN relays.',
   },
   {
+    name: 'GraphQL N+1 & DataLoader Visualizer',
+    path: '/pages/visualizers/graphql-n1-simulator/graphql-n1-simulator.html',
+    category: 'Architecture',
+    icon: 'fa-diagram-project',
+    desc: 'Visualize naive GraphQL resolvers causing the N+1 problem, and how DataLoader batches requests.',
     name: 'WebAssembly Memory & Interop Visualizer',
     path: '/pages/visualizers/wasm-memory-simulator/wasm-memory-simulator.html',
     category: 'Systems & OS',
