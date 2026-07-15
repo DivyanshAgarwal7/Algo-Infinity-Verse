@@ -63,6 +63,30 @@ export function runTestCases(title, code) {
   }
 }
 
+export function runDetailedTestCases(title, code) {
+  const problem = TEST_CASES[title];
+  if (!problem) {
+    throw new Error(`Unsupported battle problem: ${title}`);
+  }
+  const sandbox = { console, result: null };
+  const context = vm.createContext(sandbox);
+
+  try {
+    vm.runInContext(code, context, { timeout: 1000 });
+    return problem.cases.map((test) => {
+      const argsStr = JSON.stringify(test.args).slice(1, -1);
+      try {
+        vm.runInContext(`result = ${problem.func}(${argsStr});`, context, { timeout: 1000 });
+        return JSON.stringify(sandbox.result) === JSON.stringify(test.expected);
+      } catch (err) {
+        return false;
+      }
+    });
+  } catch (err) {
+    return problem.cases.map(() => false);
+  }
+}
+
 // Add these two entries to COLLECTIONS in firebase.js:
 //   BATTLES:  "battles",
 //   PROBLEMS: "problems",

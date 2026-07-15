@@ -71,7 +71,7 @@ import {
   getBattle,
   getHistory,
   TEST_CASES,
-  runTestCases,
+  runDetailedTestCases,
 } from './pages/Dsa-Battle/Battleservice.js';
 
 // import { instrumentJS } from './modules/code-tracer.js';
@@ -4101,6 +4101,37 @@ io.on('connection', (socket) => {
     }
   });
 
+  // ── Multiplayer Battle Live Telemetry ──
+  socket.on('battle-typing', (data) => {
+    const valid = validateSocketInput(data, {
+      battleId: { type: 'string', required: true },
+      userId: { type: 'string', required: true },
+      typing: { type: 'boolean', required: true },
+    });
+    if (!valid) return;
+    socket.to(`battle_${valid.battleId}`).emit('opponent:typing', {
+      userId: valid.userId,
+      typing: valid.typing,
+    });
+  });
+
+  socket.on('battle-editor-state', (data) => {
+    const valid = validateSocketInput(data, {
+      battleId: { type: 'string', required: true },
+      userId: { type: 'string', required: true },
+      charCount: { type: 'number', required: true },
+      syntaxErrors: { type: 'number', required: true },
+      wpm: { type: 'number', required: true },
+    });
+    if (!valid) return;
+    socket.to(`battle_${valid.battleId}`).emit('opponent:editor-state', {
+      userId: valid.userId,
+      charCount: valid.charCount,
+      syntaxErrors: valid.syntaxErrors,
+      wpm: valid.wpm,
+    });
+  });
+
   socket.on('battle-submit', (data) => {
     const valid = validateSocketInput(data, {
       battleId: { type: 'string', required: true },
@@ -4115,7 +4146,19 @@ io.on('connection', (socket) => {
       return;
     }
 
-    const passed = runTestCases(battle.problemTitle, valid.code);
+    let results = [];
+    try {
+      results = runDetailedTestCases(battle.problemTitle, valid.code);
+    } catch (e) {
+      results = [false];
+    }
+    const passed = results.length > 0 && results.every((r) => r === true);
+
+    // Broadcast test run results to the room for opponent telemetry grid
+    socket.to(`battle_${valid.battleId}`).emit('opponent:test-run', {
+      userId: valid.userId,
+      results: results,
+    });
 
     if (passed) {
       battle.status = 'completed';
@@ -4130,6 +4173,7 @@ io.on('connection', (socket) => {
       socket.emit('battle-submit-result', {
         success: false,
         message: 'Tests failed. Keep trying!',
+        results: results,
       });
     }
   });
