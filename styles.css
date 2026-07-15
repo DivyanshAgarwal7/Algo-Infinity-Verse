@@ -1198,6 +1198,17 @@ button.auth-submit[data-loading='true'] {
   box-shadow:
     0 1px 0 rgba(148, 163, 184, 0.04),
     0 4px 30px rgba(0, 0, 0, 0.3);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Auto-hide navbar on scroll down, reveal on scroll up */
+.navbar.navbar-hidden {
+  transform: translateY(-100%);
+}
+
+/* When shown, no offset (default state — also prevents flash on load) */
+.navbar:not(.navbar-hidden) {
+  transform: translateY(0);
 }
 
 /* ===== NAVBAR SEARCH ===== */
@@ -2442,7 +2453,8 @@ html.light-mode .recent-item.selected {
   .dropdown-menu,
   .nav-links,
   .dropdown-toggle .dropdown-icon,
-  .nav-link {
+  .nav-link,
+  .navbar {
     transition: none;
   }
 
