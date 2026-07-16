@@ -62,9 +62,14 @@ export default async function handler(req, res) {
   if (req.method !== 'GET') return res.status(405).json({ error: 'Method not allowed' });
 
   try {
-    // Parse pagination parameters
-    const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 10;
+    // Parse pagination parameters (bounded to match the convention used by
+    // other paginated endpoints, e.g. api/battles.js and api/quiz-results.js)
+    const MAX_PAGE_SIZE = 50;
+    const parsedPage = parseInt(req.query.page, 10);
+    const page = Number.isNaN(parsedPage) ? 1 : Math.max(parsedPage, 1);
+
+    const parsedLimit = parseInt(req.query.limit, 10);
+    const limit = Number.isNaN(parsedLimit) ? 10 : Math.min(Math.max(parsedLimit, 1), MAX_PAGE_SIZE);
     const offset = (page - 1) * limit;
 
     const cookies = parseCookies(req.headers.cookie || '');
