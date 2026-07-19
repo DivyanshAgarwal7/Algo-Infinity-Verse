@@ -893,6 +893,13 @@ const visualizers = [
     desc: 'Visualize stack (LIFO) and queue (FIFO) operations.',
   },
   {
+    name: 'Amortized Cost Sandbox',
+    path: '/pages/visualizers/amortized-cost-sandbox/amortized-cost-sandbox.html',
+    category: 'Data Structures',
+    icon: 'fa-chart-column',
+    desc: 'Push/resize cost bars and cumulative average — visual proof of amortized O(1) for dynamic arrays and hash maps.',
+  },
+  {
     name: 'Bloom Filter Visualizer',
     path: '/pages/visualizers/bloom-filter-visualizer/bloom-filter-visualizer.html',
     category: 'Data Structures',
