@@ -123,6 +123,13 @@ const editors = [
     icon: 'fa-terminal',
     desc: 'Explore functional programming paradigms, list operations, recursion, and powerful macro metaprogramming in Common Lisp.',
   },
+  {
+    name: 'Prolog Playground',
+    path: '/pages/editors/prolog-playground/prolog-playground.html',
+    category: 'JVM & Functional',
+    icon: 'fa-diagram-project',
+    desc: 'Explore logic programming, facts, rules, unification, backtracking, and recursive predicates in Prolog.',
+  },
 
   // ── Systems & Special ──
   {

@@ -21,7 +21,8 @@ const templates = {
     python: `# Python Playground\n\ndef greet(name):\n    return f"Hello {name}"\n\nprint(greet("Learner"))\n`,
     java: `// Java Playground\n\npublic class Main {\n  public static void main(String[] args) {\n    System.out.println("Hello Learner");\n  }\n}\n`,
     cpp: `// C++ Playground\n\n#include <iostream>\nusing namespace std;\n\nint main() {\n  cout << "Hello Learner" << endl;\n  return 0;\n}\n`,
-    lisp: `;; Common Lisp Playground\n\n(defun greet (name)\n  (format nil "Hello ~a" name))\n\n(write-line (greet "Learner"))\n`
+    lisp: `;; Common Lisp Playground\n\n(defun greet (name)\n  (format nil "Hello ~a" name))\n\n(write-line (greet "Learner"))\n`,
+    prolog: `% Prolog Playground\n\nparent(john, bob).\nparent(bob, charlie).\n\nancestor(X, Y) :- parent(X, Y).\nancestor(X, Y) :- parent(X, Z), ancestor(Z, Y).\n\n% Run query: ancestor(john, charlie).\n`
 };
 
 // Theme configurations for Ace
@@ -38,7 +39,8 @@ const codeStorage = {
     python: templates.python,
     java: templates.java,
     cpp: templates.cpp,
-    lisp: templates.lisp
+    lisp: templates.lisp,
+    prolog: templates.prolog
 };
 
 // --- INITIALIZATION ---
@@ -209,7 +211,8 @@ function setupEventListeners() {
             python: 'ace/mode/python',
             java: 'ace/mode/java',
             cpp: 'ace/mode/c_cpp',
-            lisp: 'ace/mode/lisp'
+            lisp: 'ace/mode/lisp',
+            prolog: 'ace/mode/prolog'
         };
         editor.session.setMode(modes[selectedLang] || 'ace/mode/javascript');
         
@@ -275,7 +278,8 @@ function updateLanguageBadge(language) {
             python: 'Python',
             java: 'Java',
             cpp: 'C++',
-            lisp: 'Common Lisp'
+            lisp: 'Common Lisp',
+            prolog: 'Prolog'
         };
         badge.textContent = names[language] || language;
     }
@@ -296,7 +300,8 @@ const runners = {
     python: runPython,
     java: runJava,
     cpp: runCpp,
-    lisp: runLisp
+    lisp: runLisp,
+    prolog: runProlog
 };
 
 function runCode() {
@@ -494,6 +499,39 @@ async function runLisp(code) {
                 },
                 body: JSON.stringify({
                     language: "lisp",
+                    version: "*",
+                    files: [{ content: code }]
+                })
+            }
+        );
+
+        const result = await response.json();
+
+        output.textContent =
+            result.run?.stdout ||
+            result.run?.stderr ||
+            result.compile?.stderr ||
+            "✅ Code ran successfully with no terminal output.";
+
+    } catch (err) {
+        output.textContent = `❌ Network Error: ${err.message}`;
+    }
+}
+
+async function runProlog(code) {
+    clearOutput();
+    output.textContent = "⏳ Running Prolog via Piston...";
+
+    try {
+        const response = await fetch(
+            "https://emkc.org/api/v2/piston/execute",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    language: "prolog",
                     version: "*",
                     files: [{ content: code }]
                 })
