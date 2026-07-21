@@ -18,6 +18,13 @@ const visualizers = [
     desc: 'Interactive sandbox for the OAuth 2.0 Authorization Code Flow with PKCE.',
   },
   {
+    name: 'Diffie-Hellman Key Exchange Playground',
+    path: '/pages/visualizers/diffie-hellman-visualizer/diffie-hellman-visualizer.html',
+    category: 'Security & Crypto',
+    icon: 'fa-key',
+    desc: 'Playground for visualizing the Diffie-Hellman Key Exchange math and paint color analogy.',
+  },
+  {
     name: 'CQRS & Event Sourcing',
     path: '/pages/visualizers/cqrs-visualizer/cqrs-visualizer.html',
     category: 'Distributed Systems',
