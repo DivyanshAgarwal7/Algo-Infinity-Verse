@@ -54,6 +54,7 @@ const editors = [
     category: 'Web Technologies',
     icon: 'fa-html5',
     desc: 'Write HTML and watch it render in real time — no server, no setup. Perfect for learning tags, forms, and layout.',
+  
   },
   {
     name: 'CSS Editor',
@@ -154,6 +155,13 @@ const editors = [
 
   // ── Systems & Special ──
   {
+    name: 'D Editor',
+    path: '/pages/editors/d-editor/d-editor.html',
+    category: 'Systems & Special',
+    icon: 'fa-gem',
+    desc: 'Write D language code with syntax highlighting, starter templates, and simulated execution.',
+  },
+  {
     name: 'Go Editor',
     path: '/pages/editors/go-editor/go-editor.html',
     category: 'Systems & Special',
@@ -203,6 +211,10 @@ const filterContainer = document.getElementById('edFilters');
 const emptyState = document.getElementById('edEmpty');
 const countDisplay = document.getElementById('edCountDisplay');
 
+let activeCategory =
+  new URLSearchParams(window.location.search).get('category') ||
+  localStorage.getItem('edFilterCategory') ||
+  'all';
 /* ─── Safe localStorage helper ─── */
 function lsGet(key) {
   try {
@@ -692,6 +704,7 @@ render();
 window.addEventListener('popstate', () => {
   activeCategory =
     new URLSearchParams(window.location.search).get('category') ||
+    localStorage.getItem('edFilterCategory') ||
     lsGet('edFilterCategory') ||
     'all';
   syncChipFromURL();
